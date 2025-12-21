@@ -1,0 +1,77 @@
+services:
+  # Servicio de la aplicación PHP
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: caces_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - caces_network
+    depends_on:
+      - db
+
+  # Servicio Nginx
+  webserver:
+    image: nginx:alpine
+    container_name: caces_webserver
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - caces_network
+    depends_on:
+      - app
+
+  # Servicio MySQL
+  db:
+    image: mysql:8.0
+    container_name: caces_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-caces_db}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_USER: ${DB_USERNAME:-caces_user}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    ports:
+      - "3307:3306"
+    volumes:
+      - caces_dbdata:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - caces_network
+
+  # phpMyAdmin (opcional - para administrar la base de datos)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: caces_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
+    ports:
+      - "8081:80"
+    networks:
+      - caces_network
+    depends_on:
+      - db
+
+# Redes
+networks:
+  caces_network:
+    driver: bridge
+
+# Volúmenes
+volumes:
+  caces_dbdata:
+    driver: local

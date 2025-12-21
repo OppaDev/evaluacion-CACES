@@ -14,12 +14,12 @@ class CreateFuenteInformacionsTable extends Migration
     public function up()
     {
         Schema::create('fuente_informacions', function (Blueprint $table) {
-            $table->unsignedInteger('id');
+            $table->increments('id');
             $table->unsignedInteger('ind_id');
             $table->text('documento')->nullable();
             $table->timestamps();
             
-            $table->primary(['id', 'ind_id']);
+            $table->index(['id', 'ind_id']);
             $table->foreign('ind_id', 'FK_Reference_19')->references('id')->on('indicadors')->onDelete('cascade')->onUpdate('cascade');
         });
     }

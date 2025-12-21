@@ -14,12 +14,12 @@ class CreateFormulasTable extends Migration
     public function up()
     {
         Schema::create('formulas', function (Blueprint $table) {
-            $table->unsignedInteger('id');
+            $table->increments('id');
             $table->unsignedInteger('ind_id');
             $table->string('formula')->nullable();
             $table->timestamps();
             
-            $table->primary(['id', 'ind_id']);
+            $table->unique(['id', 'ind_id']);
         });
     }
 

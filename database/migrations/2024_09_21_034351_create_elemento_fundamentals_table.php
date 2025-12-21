@@ -14,13 +14,13 @@ class CreateElementoFundamentalsTable extends Migration
     public function up()
     {
         Schema::create('elemento_fundamentals', function (Blueprint $table) {
-            $table->unsignedInteger('id');
+            $table->increments('id');
             $table->unsignedInteger('ind_id');
             $table->text('elemento')->nullable();
             $table->decimal('porcentaje', 8, 3)->nullable();
             $table->timestamps();
             
-            $table->primary(['id', 'ind_id']);
+            $table->index(['id', 'ind_id']);
             $table->foreign('ind_id', 'FK_Relationship_10')->references('id')->on('indicadors')->onDelete('cascade')->onUpdate('cascade');
         });
     }

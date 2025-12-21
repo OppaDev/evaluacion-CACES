@@ -16,13 +16,13 @@ class SubcriterioSeeder extends Seeder
     public function run()
     {
         $subcriterios = [            
-            ['cri_id' => '1', 'subcriterio' => 'SUBCRITERIO 1: GESTIÓN ESTRATÉGICA'],
-            ['cri_id' => '1', 'subcriterio' => 'SUBCRITERIO 2: INFRAESTRUCTURA'],
-            ['cri_id' => '1', 'subcriterio' => 'SUBCRITERIO 3: PRINCIPIOS Y VALORES'],
-            ['cri_id' => '3', 'subcriterio' => 'SUBCRITERIO 4: PERSONAL ACADÉMICO Y PERSONAL DE APOYO'],
-            ['cri_id' => '3', 'subcriterio' => 'SUBCRITERIO 5: ASPIRANTES, ESTUDIANTES Y GRADUADOS'],
-            ['cri_id' => '4', 'subcriterio' => 'SUBCRITERIO 6: POLÍTICA DE INVESTIGACIÓN Y ORGANIZACIÓN'],
-            ['cri_id' => '4', 'subcriterio' => 'SUBCRITERIO 7: RESULTADOS, CONTRIBUCIÓN E IMPACTOS DE LA INVESTIGACIÓN,DESARROLLO E INNOVACIÓN'],
+            ['id' => 1, 'cri_id' => '1', 'subcriterio' => 'SUBCRITERIO 1: GESTIÓN ESTRATÉGICA'],
+            ['id' => 2, 'cri_id' => '1', 'subcriterio' => 'SUBCRITERIO 2: INFRAESTRUCTURA'],
+            ['id' => 3, 'cri_id' => '1', 'subcriterio' => 'SUBCRITERIO 3: PRINCIPIOS Y VALORES'],
+            ['id' => 4, 'cri_id' => '3', 'subcriterio' => 'SUBCRITERIO 4: PERSONAL ACADÉMICO Y PERSONAL DE APOYO'],
+            ['id' => 5, 'cri_id' => '3', 'subcriterio' => 'SUBCRITERIO 5: ASPIRANTES, ESTUDIANTES Y GRADUADOS'],
+            ['id' => 6, 'cri_id' => '4', 'subcriterio' => 'SUBCRITERIO 6: POLÍTICA DE INVESTIGACIÓN Y ORGANIZACIÓN'],
+            ['id' => 7, 'cri_id' => '4', 'subcriterio' => 'SUBCRITERIO 7: RESULTADOS, CONTRIBUCIÓN E IMPACTOS DE LA INVESTIGACIÓN,DESARROLLO E INNOVACIÓN'],
         ];
 
         foreach ($subcriterios as $subcriterio) {

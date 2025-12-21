@@ -14,13 +14,13 @@ class CreateSubcriteriosTable extends Migration
     public function up()
     {
         Schema::create('subcriterios', function (Blueprint $table) {
-            $table->unsignedInteger('id');
+            $table->increments('id');
             $table->unsignedInteger('cri_id');
             $table->string('subcriterio', 254)->nullable();
             $table->decimal('porcentaje', 8, 3)->nullable();
             $table->timestamps();
             
-            $table->primary(['id', 'cri_id']);
+            $table->unique(['id', 'cri_id']);
             $table->foreign('cri_id', 'FK_Relationship_13')->references('id')->on('criterios')->onDelete('cascade')->onUpdate('cascade');
         });
     }

@@ -17,10 +17,8 @@ class CreateIndicadorsFKRelationship7Table extends Migration
         Schema::table('indicadors', function (Blueprint $table) {
             $table->foreign(['for_id', 'ind_id'], 'FK_Relationship_7')->references(['id', 'ind_id'])->on('formulas')->onDelete('cascade')->onUpdate('cascade');
         });
-        $tables=['subcriterios','formulas','indicadors','fuente_informacions','evaluacions','elemento_fundamentals','resultados'];
-        foreach ($tables as $table) {
-            DB::statement("ALTER TABLE $table MODIFY id INT UNSIGNED NOT NULL AUTO_INCREMENT;");
-        }
+        // Nota: Se omiten las modificaciones de AUTO_INCREMENT que causan conflictos con foreign keys
+        // Las tablas ya tienen id auto_increment por defecto en Laravel
     }
 
     /**

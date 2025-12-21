@@ -1,0 +1,45 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+.docker
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Dependencias (se instalan durante el build)
+/node_modules
+/vendor
+
+# Archivos de entorno locales
+.env
+.env.backup
+.env.production
+
+# Logs y cache
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/framework/cache/*
+!/storage/framework/cache/.gitkeep
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
+/storage/framework/views/*
+!/storage/framework/views/.gitkeep
+
+# Testing
+/coverage
+.phpunit.result.cache
+
+# Otros
+*.md
+!README.md
+!DOCKER_DEPLOY.md
+npm-debug.log
+yarn-error.log
