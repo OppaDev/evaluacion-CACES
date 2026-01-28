@@ -21,10 +21,27 @@ class CriteriaAssignmentsController extends Controller
     {
         $aux = [];
         $criterios = Criterio::all();
-        $users = $usuarios = User::whereDoesntHave('roles', function ($query) {
-            $query->where('name', 'admin');
-        })->get();
         $evaluacion = Evaluacion::find($id);
+        
+        // Verificar que la evaluación existe
+        if (!$evaluacion) {
+            abort(404, 'La evaluación no existe.');
+        }
+        
+        // Si es SedeR, verificar que la evaluación pertenece a su universidad
+        $user = auth()->user();
+        if ($user->hasRole('SedeR')) {
+            $userUniversidadIds = $user->universidades->pluck('id')->toArray();
+            if (!in_array($evaluacion->uni_id, $userUniversidadIds)) {
+                abort(403, 'No tienes permiso para ver esta evaluación.');
+            }
+        }
+        
+        // Usuarios disponibles para asignar (todos excepto Admin)
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'Admin');
+        })->get();
+        
         $responsable = User::where('id',);
         foreach ($criterios as $key => $criterio) {
             $criId = $criterio->id;
@@ -46,7 +63,7 @@ class CriteriaAssignmentsController extends Controller
         $evaluacionId = $request->eva_id;
         $rolName = 'CriteriaR';
         $user = User::find($userId);
-        $user->assignRole(2);
+        $user->assignRole($rolName);
         try {
             $user->removeRole('Viewer');
         } catch (\Throwable $th) {
@@ -61,13 +78,15 @@ class CriteriaAssignmentsController extends Controller
             session()->flash('success', 'Responsable asignado.');
         } catch (\Throwable $th) {
             $oldUser = User::permission($permissionName)->get()->first();
-            $permissionsCount = $oldUser->permissions()->where('name', 'like', "$evaluacionId/%")->count();
-            if($permissionsCount<2){
-                $oldUser->removeRole($rolName);
-            }
-            $oldUser->revokePermissionTo($permissionName);
-            if($oldUser->roles->isEmpty()&&$oldUser->permissions->isEmpty()){
-                $oldUser->assignRole('Viewer');
+            if ($oldUser) {
+                $permissionsCount = $oldUser->permissions()->where('name', 'like', "$evaluacionId/%")->count();
+                if($permissionsCount<2){
+                    $oldUser->removeRole($rolName);
+                }
+                $oldUser->revokePermissionTo($permissionName);
+                if($oldUser->roles->isEmpty()&&$oldUser->permissions->isEmpty()){
+                    $oldUser->assignRole('Viewer');
+                }
             }
             $user->givePermissionTo($permissionName);
             $user->assignRole($rolName);

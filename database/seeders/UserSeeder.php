@@ -35,5 +35,18 @@ class UserSeeder extends Seeder
         User::create($user1)->assignRole('Admin');
         User::create($user2)->assignRole('Admin');
         User::create($user3)->assignRole('Admin');
+
+        // Usuarios de prueba con rol Viewer
+        $testUsers = [
+            ['name' => 'Usuario Prueba 1', 'email' => 'prueba1@test.com', 'password' => Hash::make('prueba123')],
+            ['name' => 'Usuario Prueba 2', 'email' => 'prueba2@test.com', 'password' => Hash::make('prueba123')],
+            ['name' => 'Usuario Prueba 3', 'email' => 'prueba3@test.com', 'password' => Hash::make('prueba123')],
+            ['name' => 'Usuario Prueba 4', 'email' => 'prueba4@test.com', 'password' => Hash::make('prueba123')],
+            ['name' => 'Usuario Prueba 5', 'email' => 'prueba5@test.com', 'password' => Hash::make('prueba123')],
+        ];
+
+        foreach ($testUsers as $testUser) {
+            User::create($testUser)->assignRole('Viewer');
+        }
     }
 }

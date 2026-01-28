@@ -12,7 +12,7 @@
     </nav>
 </div>
 @foreach ($criterios as $criterio )
-@if(auth()->user()->can("$evaluacion->id/$criterio->id")||auth()->user()->can('admin'))
+@if(auth()->user()->can("$evaluacion->id/$criterio->id")||auth()->user()->can('admin')||auth()->user()->hasRole('SedeR'))
 @if(!$criterio->subcriterios->isEmpty())
 <div class="card">
     <div class="card-header pb-2">

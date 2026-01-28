@@ -47,40 +47,45 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::middleware(['role:Admin|CriteriaR'])->group(function(){
+    // Rutas para Admin y SedeR (asignaciones de criterios e indicadores)
+    Route::middleware(['role:Admin|SedeR'])->group(function(){
+        Route::resource('criteria-assignments', CriteriaAssignmentsController::class)->names('criteria.assignments');
         Route::resource('indicador-assignments', IndicadorAssignmentsController::class)->names('indicador.assignments');
     });
 
-    // Bloquear solo las rutas específicas para Admin
-    Route::middleware(['role:Admin'])->group(function () {
-
-        // Bloquear rutas de asignaciones
-        Route::resource('criteria-assignments', CriteriaAssignmentsController::class)->names('criteria.assignments');
+    // Rutas para Admin, SedeR y CriteriaR (asignación de indicadores)
+    Route::middleware(['role:Admin|SedeR|CriteriaR'])->group(function(){
         Route::resource('indicador-assignments', IndicadorAssignmentsController::class)->names('indicador.assignments');
+    });
+
+    // Rutas exclusivas para Admin
+    Route::middleware(['role:Admin'])->group(function () {
 
         // Bloquear rutas de criterios
         Route::get('{eva_id}/criterio/{cri_id}', [CriterioController::class, 'criterio'])->name('criterio');
 
-        //Manipular usuarios
+        //Manipular usuarios (crear, editar, eliminar)
         Route::get('users', [UserController::class, 'index'])->name('users');
         Route::patch('users/{user}', [UserController::class, 'update'])->name('users.update');
         Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+        
+        // Gestión de SedeR
+        Route::post('users/{user}/assign-seder', [UserController::class, 'assignSedeR'])->name('users.assign-seder');
+        Route::delete('users/{user}/remove-seder', [UserController::class, 'removeSedeR'])->name('users.remove-seder');
 
-        //Bloquear ruta registrar usuario
+        //Ruta registrar usuario
         Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
         Route::post('register', [RegisterController::class, 'register'])->name('register');
         Route::get('universidades/create', [UniversidadController::class, 'create'])->name('universidades.create');
-        //bloquear ruta editar y update:
+        
+        //Ruta editar evaluaciones
         Route::get('evaluaciones/{id}/edit', [EvaluacionController::class, 'edit'])->name('evaluaciones.edit');
 
-        // Bloquear ruta de indicadores
-        //Route::get('{id}/indicadores', [IndicadorController::class, 'index'])->name('indicadores.index');
         // CONFIGURACION DE PORCENTAJES
         Route::resource('porcentaje/criterios', PorcentajeCriterioController::class)->names('porcentaje.criterios');
         Route::resource('porcentaje/subcriterios', PorcentajeSubcriterioController::class)->names('porcentaje.subcriterios');
         Route::resource('porcentaje/indicadores', PorcentajeIndicadorController::class)->names('porcentaje.indicadores');
         Route::resource('porcentaje/elementos', PorcentajeElementoController::class)->names('porcentaje.elementos');
-
                   
     
     });

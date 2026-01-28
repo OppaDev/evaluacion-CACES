@@ -91,7 +91,7 @@
                     </td>
                     <td>
                         <select id="selectEscala" class="selectEscala form-select form-select-sm"
-                            wire:model="valoracion.{{ $elementoFundamental->id }}" @if(auth()->user()->hasRole('Viewer'))
+                            wire:model="valoracion.{{ $elementoFundamental->id }}" @if(auth()->user()->hasRole('Viewer') || (auth()->user()->hasRole('SedeR') && !auth()->user()->hasRole('IndicatorR') && !auth()->user()->hasRole('CriteriaR')))
                             disabled
                             @endif>
                             <option value={{0}}>Seleccionar...</option>
@@ -115,7 +115,7 @@
                                         </div>
                                         <div class="modal-body">
                                             <textarea class="comentario form-control" id="comentario" rows="20"
-                                                wire:model.defer="observacion.{{ $elementoFundamental->id }}" placeholder="Comentario" @if(auth()->user()->hasRole('Viewer'))
+                                                wire:model.defer="observacion.{{ $elementoFundamental->id }}" placeholder="Comentario" @if(auth()->user()->hasRole('Viewer') || (auth()->user()->hasRole('SedeR') && !auth()->user()->hasRole('IndicatorR') && !auth()->user()->hasRole('CriteriaR')))
                                 disabled
                                 @endif></textarea>
                                         </div>
@@ -210,7 +210,7 @@
                 @endphp
                 <div class="d-flex justify-content-end">
                     <button type="button" wire:click.prevent={{$action}}
-                        class="btn btn-primary pb-2 pt-2" @if(auth()->user()->hasRole('Viewer'))
+                        class="btn btn-primary pb-2 pt-2" @if(auth()->user()->hasRole('Viewer') || (auth()->user()->hasRole('SedeR') && !auth()->user()->hasRole('IndicatorR') && !auth()->user()->hasRole('CriteriaR')))
                         disabled
                         @endif><i class="fas fa-save"></i> {{$buttonName}}</button>
                 </div>

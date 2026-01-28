@@ -20,12 +20,28 @@ class IndicadorAssignmentsController extends Controller
         $permisos = [];
         $criterios = Criterio::all();
         $indicadors = Indicador::all();
-        $users = $usuarios = User::whereDoesntHave('roles', function ($query) {
-            $query->where('name', 'admin');
-        })->get();
         $evaluacion = Evaluacion::find($id);
+        
+        // Verificar que la evaluación existe
+        if (!$evaluacion) {
+            abort(404, 'La evaluación no existe.');
+        }
+        
+        // Si es SedeR, verificar que la evaluación pertenece a su universidad
+        $currentUser = auth()->user();
+        if ($currentUser->hasRole('SedeR')) {
+            $userUniversidadIds = $currentUser->universidades->pluck('id')->toArray();
+            if (!in_array($evaluacion->uni_id, $userUniversidadIds)) {
+                abort(403, 'No tienes permiso para ver esta evaluación.');
+            }
+        }
+        
+        // Usuarios disponibles para asignar (todos excepto Admin)
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'Admin');
+        })->get();
+        
         $responsable = User::where('id',);
-
 
         foreach ($indicadors as $key => $indicador) {
             $indId = $indicador->id;
@@ -74,10 +90,12 @@ class IndicadorAssignmentsController extends Controller
             $user->givePermissionTo("$evaluacionId/$cri_id");
         } catch (\Throwable $th) {
             $oldUser = User::permission($permissionName)->get()->first();
-            $oldUser->removeRole($rolName);
-            $oldUser->revokePermissionTo($permissionName);
-            if($oldUser->roles->isEmpty()&&$oldUser->permissions->isEmpty()){
-                $oldUser->assignRole('Viewer');
+            if ($oldUser) {
+                $oldUser->removeRole($rolName);
+                $oldUser->revokePermissionTo($permissionName);
+                if($oldUser->roles->isEmpty()&&$oldUser->permissions->isEmpty()){
+                    $oldUser->assignRole('Viewer');
+                }
             }
             $user->givePermissionTo($permissionName);
         }

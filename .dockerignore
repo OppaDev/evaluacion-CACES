@@ -1,0 +1,58 @@
+# =============================================================================
+# Archivos a ignorar en el contexto de Docker
+# =============================================================================
+
+# Dependencias (se instalan en el contenedor)
+/node_modules
+/vendor
+
+# Archivos de entorno local
+.env
+.env.local
+.env.*.local
+
+# Storage completo (se monta como volumen en producción)
+/storage/app/*
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/debugbar/*
+/bootstrap/cache/*
+
+# Assets compilados (se generan en el build)
+/public/build
+/public/hot
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE y editores
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# Pruebas
+/tests
+phpunit.xml
+.phpunit.result.cache
+
+# Documentación
+README.md
+CHANGELOG.md
+docs/
+
+# Docker (evitar recursión)
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Otros
+*.log
+*.cache
+.DS_Store
+Thumbs.db

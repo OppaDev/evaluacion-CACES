@@ -64,7 +64,13 @@
                     @php
                     $hasPermission = false;
                     $evaluaciones = $universidad->evaluacions;
+                    // Viewer ve todo
                     if(auth()->user()->hasRole('Viewer')){
+                        $contador += 1;
+                        $hasPermission = true;
+                    }
+                    // SedeR ve las universidades a las que está vinculado
+                    if(auth()->user()->hasRole('SedeR') && auth()->user()->universidades->contains('id', $universidad->id)){
                         $contador += 1;
                         $hasPermission = true;
                     }

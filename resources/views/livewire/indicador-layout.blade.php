@@ -36,7 +36,7 @@
             @php
             $ind_cri_id=$indicador->subcriterio->criterio->id;
             @endphp
-            @if ((auth()->user()->can("$evaluacion->id/$ind_cri_id")&&auth()->user()->hasRole('CriteriaR'))||auth()->user()->can('admin') || auth()->user()->can("$evaluacion->id-$indicador->id")||auth()->user()->hasRole('Viewer'))
+            @if ((auth()->user()->can("$evaluacion->id/$ind_cri_id")&&auth()->user()->hasRole('CriteriaR'))||auth()->user()->can('admin') || auth()->user()->can("$evaluacion->id-$indicador->id")||auth()->user()->hasRole('Viewer') || auth()->user()->hasRole('SedeR'))
             <div class="card-body" id="indicador_{{ $indicador->id }}" style="padding-top: 25px;">
                 <h5 class="card-title mt-3" style="color: #0c63e4">{{ $indicador->indicador }} <b
                         style="margin-left: 20px; color: red;">{{ $indicador->porcentaje }} %</b>
@@ -97,6 +97,7 @@
                             </div>
                         </div>
                     </div>
+                    {{-- ACCIONES DE MEJORA - Desactivado temporalmente (tabla tareas no existe)
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading_tarea_{{ $indicador->id }}">
                             <button class="accordion-button collapsed" style="background: #c84239" type="button" data-bs-toggle="collapse"
@@ -112,6 +113,7 @@
                             </div>
                         </div>
                     </div>
+                    --}}
                     {{-- FIN ACORDION PARA FUENTES DE INFORMACION --}}
                 </div>
             </div>
@@ -124,7 +126,7 @@
         @php
         $ind_cri_id=$indicador->criterio->id;
         @endphp
-        @if ((auth()->user()->can("$evaluacion->id/$ind_cri_id")&&auth()->user()->hasRole('CriteriaR'))||auth()->user()->can('admin') || auth()->user()->can("$evaluacion->id-$indicador->id") || auth()->user()->can("CriteriaR")||auth()->user()->hasRole('Viewer'))
+        @if ((auth()->user()->can("$evaluacion->id/$ind_cri_id")&&auth()->user()->hasRole('CriteriaR'))||auth()->user()->can('admin') || auth()->user()->can("$evaluacion->id-$indicador->id") || auth()->user()->can("CriteriaR")||auth()->user()->hasRole('Viewer') || auth()->user()->hasRole('SedeR'))
         <div class="card-body" id="indicador_{{ $indicador->id }}" style="padding-top: 25px;">
             <h5 class="card-title mt-3" style="color: #0c63e4">{{ $indicador->indicador }} <b
                     style="margin-left: 20px; color: red;">{{ $indicador->porcentaje }} %</b>
@@ -185,6 +187,7 @@
                         </div>
                     </div>
                 </div>
+                {{-- ACCIONES DE MEJORA - Desactivado temporalmente (tabla tareas no existe)
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading_tarea_{{ $indicador->id }}">
                         <button class="accordion-button collapsed" style="background: #c84239" type="button" data-bs-toggle="collapse"
@@ -200,6 +203,7 @@
                         </div>
                     </div>
                 </div>
+                --}}
                 {{-- FIN ACORDION PARA FUENTES DE INFORMACION --}}
             </div>
         </div>

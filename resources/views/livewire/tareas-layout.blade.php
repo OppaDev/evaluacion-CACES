@@ -34,7 +34,7 @@
         <h5>Acciones de mejora</h5>
         </br>
         <button type="button" class="btn btn-outline-pacifico mb-4 btn-sm" data-bs-toggle="modal"
-            data-bs-target="#assign_tarea_{{ $ind_id }}" @if(auth()->user()->hasRole('Viewer'))
+            data-bs-target="#assign_tarea_{{ $ind_id }}" @if(auth()->user()->hasRole('Viewer') || (auth()->user()->hasRole('SedeR') && !auth()->user()->hasRole('IndicatorR') && !auth()->user()->hasRole('CriteriaR')))
             disabled
             @endif><i class="bi bi-plus"></i>CREAR NUEVA TAREA</button>
         @if ($message = Session::get('success'))

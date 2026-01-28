@@ -15,15 +15,15 @@
 <li>
     <hr class="modulo-divider">
 </li>
-@can('admin')
+@if(auth()->user()->can('admin') || auth()->user()->hasRole('SedeR'))
 <li class="nav-heading">Configuracion</li>
 <li class="nav-item">
     <a class="nav-link collapsed" id="criteria-assignments" href="{{ route('criteria.assignments.show',$evaluacion->id)}}">
         <i class="bi bi-file-text"></i><span>Asignar Criterios</span>
     </a>
 </li>
-@endcan
-@if (auth()->user()->can('CriteriaR')||auth()->user()->can('admin'))
+@endif
+@if (auth()->user()->can('CriteriaR')||auth()->user()->can('admin')||auth()->user()->hasRole('SedeR'))
 <li class="nav-item">
     <a class="nav-link collapsed" id="indicador-assignments" href="{{ route('indicador.assignments.show',$evaluacion->id)}}">
         <i class="bi bi-file-text"></i><span>Asignar Indicadores</span>
@@ -71,7 +71,7 @@ break;
 }
 }
 @endphp
-@if (auth()->user()->can("admin")||auth()->user()->can("$evaluacion->id/$criterio->id")||$hasPermission)
+@if (auth()->user()->can("admin")||auth()->user()->hasRole('SedeR')||auth()->user()->can("$evaluacion->id/$criterio->id")||$hasPermission)
 <li class="nav-item">
     <a class="nav-link collapsed" id="criterio_{{$criterio->id}}" href="{{ route('criterio', [$evaluacion->id,$criterio->id]) }}">
         <i class="bi bi-{{$icons[$criterio->id-1]}}"></i><span>{{mb_convert_case($criterio->criterio,MB_CASE_TITLE, "UTF-8")}}</span>

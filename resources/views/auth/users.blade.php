@@ -45,7 +45,9 @@
                             <th scope="col">#</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Email</th>
-                            <th scope="col">OP</th>
+                            <th scope="col">Rol</th>
+                            <th scope="col">Sede</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody class="table-group-divider">
@@ -55,22 +57,103 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>
+                                    @foreach($user->roles as $role)
+                                        <span class="badge 
+                                            @if($role->name == 'Admin') bg-danger
+                                            @elseif($role->name == 'SedeR') bg-primary
+                                            @elseif($role->name == 'CriteriaR') bg-success
+                                            @elseif($role->name == 'IndicatorR') bg-info
+                                            @else bg-secondary
+                                            @endif">
+                                            {{ $role->name }}
+                                        </span>
+                                    @endforeach
+                                    @if($user->roles->isEmpty())
+                                        <span class="badge bg-secondary">Sin rol</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($user->hasRole('SedeR'))
+                                        @php $sede = $user->universidades->first(); @endphp
+                                        @if($sede)
+                                            <span class="text-primary">{{ $sede->universidad }}</span>
+                                        @else
+                                            <span class="text-muted">No asignada</span>
+                                        @endif
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    {{-- Botón Eliminar --}}
                                     <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-link link-danger fs-6 p-0 m-0">
+                                        <button type="submit" class="btn btn-link link-danger fs-6 p-0 m-0" title="Eliminar">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
+
+                                    {{-- Gestión SedeR (solo si no es Admin) --}}
+                                    @if(!$user->hasRole('Admin'))
+                                        @if($user->hasRole('SedeR'))
+                                            {{-- Botón Remover SedeR --}}
+                                            <form action="{{ route('users.remove-seder', $user) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-link link-warning fs-6 p-0 m-0 ms-2" title="Remover SedeR">
+                                                    <i class="bi bi-person-dash"></i>
+                                                </button>
+                                            </form>
+                                        @else
+                                            {{-- Botón Asignar SedeR --}}
+                                            <button type="button" class="btn btn-link link-primary fs-6 p-0 m-0 ms-2" 
+                                                data-bs-toggle="modal" data-bs-target="#assignSedeRModal{{ $user->id }}" 
+                                                title="Asignar como SedeR">
+                                                <i class="bi bi-person-plus"></i>
+                                            </button>
+                                        @endif
+                                    @endif
                                 </td>
                             </tr>
+
+                            {{-- Modal para asignar SedeR --}}
+                            @if(!$user->hasRole('Admin') && !$user->hasRole('SedeR'))
+                            <div class="modal fade" id="assignSedeRModal{{ $user->id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-primary text-white">
+                                            <h6 class="modal-title">Asignar SedeR</h6>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form action="{{ route('users.assign-seder', $user) }}" method="POST">
+                                            @csrf
+                                            <div class="modal-body">
+                                                <p class="small mb-2">Asignar a <strong>{{ $user->name }}</strong> como responsable de:</p>
+                                                <select name="universidad_id" class="form-select" required>
+                                                    <option value="">Seleccionar universidad...</option>
+                                                    @foreach($universidades as $universidad)
+                                                        <option value="{{ $universidad->id }}">{{ $universidad->universidad }} - {{ $universidad->campus }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                <button type="submit" class="btn btn-sm btn-primary">Asignar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         @empty
-                            <p>No hay usuarios registrados</p>
+                            <tr>
+                                <td colspan="6">No hay usuarios registrados</td>
+                            </tr>
                         @endforelse
 
                     </tbody>
                 </table>
-
             </div>
         </div>
     </div>

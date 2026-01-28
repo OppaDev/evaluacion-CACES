@@ -9,12 +9,14 @@
     <hr class="modulo-divider">
 </li>
 @endcan
+
 <li class="nav-heading">UNIVERSIDAD</li>
 <li class="nav-item">
     <a class="nav-link collapsed" id="universidades" href="{{ route('universidades.index') }}">
         <i class="bi bi-grid"></i><span>SEDES</span>
     </a>
 </li>
+
 @can('admin')
 <li class="nav-item">
     <a class="nav-link collapsed" id="new_user" href="{{ route('users') }}">

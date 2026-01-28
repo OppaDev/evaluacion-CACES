@@ -65,6 +65,11 @@
                         $contador += 1;
                         $hasPermission = true;
                     }
+                    // SedeR siempre tiene permiso para ver evaluaciones de su universidad
+                    if(auth()->user()->hasRole('SedeR')){
+                        $contador += 1;
+                        $hasPermission = true;
+                    }
                     foreach (auth()->user()->getAllPermissions() as $permission) {
                     if (Str::startsWith($permission->name, "$evaluacion->id/")||auth()->user()->can('admin')||Str::startsWith($permission->name, "$evaluacion->id-")) {
                     $hasPermission = true;

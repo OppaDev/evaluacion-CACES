@@ -1,10 +1,10 @@
-@can("criterio_$criterio->id")
+@if(auth()->user()->can("criterio_".(isset($criterio) ? $criterio->id : 1)) || auth()->user()->can('admin') || auth()->user()->hasRole('SedeR'))
 <div class="modal fade" id="users" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-crear text-white pb-2 pt-2">
-                <h6 class="modal-title fw-normal text-uppercase">Asignar responsable de {{$indicador->indicador}}</h6>
+                <h6 class="modal-title fw-normal text-uppercase">Asignar responsable de indicador</h6>
                 <button type="button" class="btn btn-sm text-white" data-bs-dismiss="modal" aria-label="Close"><i
                         class="bi bi-x-lg"></i></button>
             </div>
@@ -25,4 +25,4 @@
         </div>
     </div>
 </div>
-@endcan
+@endif

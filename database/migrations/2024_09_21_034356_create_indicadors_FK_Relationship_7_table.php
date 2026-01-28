@@ -17,10 +17,17 @@ class CreateIndicadorsFKRelationship7Table extends Migration
         Schema::table('indicadors', function (Blueprint $table) {
             $table->foreign(['for_id', 'ind_id'], 'FK_Relationship_7')->references(['id', 'ind_id'])->on('formulas')->onDelete('cascade')->onUpdate('cascade');
         });
+        
+        // Deshabilitar verificación de FK para poder modificar columnas
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        
         $tables=['subcriterios','formulas','indicadors','fuente_informacions','evaluacions','elemento_fundamentals','resultados'];
         foreach ($tables as $table) {
             DB::statement("ALTER TABLE $table MODIFY id INT UNSIGNED NOT NULL AUTO_INCREMENT;");
         }
+        
+        // Rehabilitar verificación de FK
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     /**
