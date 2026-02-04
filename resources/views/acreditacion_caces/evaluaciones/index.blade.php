@@ -51,7 +51,10 @@
                         <th scope="col">ADMINISTRADOR</th>
                         <th scope="col">DEPARTAMENTO</th>
                         <!-- <th scope="col">FACULTAD</th> -->
-                        <th scope="col">ACCIONES</th>
+                        @can('admin')
+                        <th scope="col">CONFIGURACIÓN</th>
+                        @endcan
+                        <th scope="col">ACCEDER</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,12 +99,13 @@
                             {{ $evaluacion->departamento }}
                         </td>
                         
-                            <!-- <td>{{ $evaluacion->facultad }}</td> --> 
+                        <!-- <td>{{ $evaluacion->facultad }}</td> --> 
                         
-                        <td style="width: 160px;">
-                            <div class="nav fs-6">
-                                @can('admin')
-                                <a type="button" class="nav-link text-actualizar" title="Editar"
+                        {{-- Columna CONFIGURACIÓN (Solo Admin) --}}
+                        @can('admin')
+                        <td style="width: 120px;">
+                            <div class="nav fs-6 justify-content-center">
+                                <a type="button" class="nav-link text-actualizar p-1" title="Editar"
                                     href="{{ route('evaluaciones.edit', $evaluacion->id) }}">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
@@ -109,15 +113,19 @@
                                     class="d-inline formulario-eliminar">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn text-eliminar" title="Borrar"><i
+                                    <button type="submit" class="btn text-eliminar p-1" title="Borrar"><i
                                             class="bi bi-trash"></i></button>
                                 </form>
-                                @endcan
-                                <a type="button" class="nav-link text-crear" title="Ingresar"
-                                    href="{{ route('indicadores.index', $evaluacion->id) }}">
-                                    <i class="fas fa-sign-in-alt"></i>
-                                </a>
                             </div>
+                        </td>
+                        @endcan
+
+                        {{-- Columna ACCEDER --}}
+                        <td class="text-center">
+                            <a type="button" class="btn btn-sm btn-outline-pacifico" title="Ingresar a Evaluación"
+                                href="{{ route('indicadores.index', $evaluacion->id) }}" style="font-size: 10px;">
+                                <i class="fas fa-sign-in-alt me-1"></i> Ingresar
+                            </a>
                         </td>
                     </tr>
                     @endif

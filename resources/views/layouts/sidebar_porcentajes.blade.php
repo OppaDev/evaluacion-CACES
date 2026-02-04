@@ -1,6 +1,6 @@
 <li class="nav-heading">CONFIGURACIÓN DE LOS PORCENTAJES</li>
 <li class="nav-item">
-    <a class="nav-link collapsed" id="inicio" href="{{ route('universidades.index') }}">
+    <a class="nav-link collapsed" id="inicio" href="{{ route('home') }}">
         <i class="bi bi-arrow-return-left"></i><span>Regresar</span>
     </a>
 </li>

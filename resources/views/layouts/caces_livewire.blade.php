@@ -37,8 +37,8 @@
 
         <!-- Logo -->
         <div class="d-flex align-items-center justify-content-between">
-            <a href="index.html" class="logo d-flex align-items-center">
-                <img src="{{ asset('img/Logo_ESPE.png') }}" alt="">
+            <a href="{{ route('home') }}" class="logo d-flex align-items-center">
+                <img src="https://www.espe.edu.ec/wp-content/uploads/2023/03/espe.png" alt="">
                 <span class="d-none d-lg-block">ESPE</span>
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>

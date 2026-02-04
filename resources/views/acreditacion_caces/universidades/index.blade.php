@@ -128,10 +128,7 @@
                                             class="bi bi-trash"></i></button>
                                 </form>
                                 @endcan
-                                <a type="button" class="nav-link text-crear" title="Ingresar"
-                                    href="{{ route('evaluaciones.show', $universidad->id) }}">
-                                    <i class="bi bi-box-arrow-in-right"></i>
-                                </a>
+
                             </div>
                         </td>
                     </tr>

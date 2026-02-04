@@ -1,5 +1,5 @@
 <li class="nav-item">
-    <a class="nav-link collapsed" id="" href="{{ route(name: 'universidades.index') }}">
+    <a class="nav-link collapsed" id="" href="{{ route('home') }}">
         <i class="bi bi-arrow-return-left"></i><span>Regresar</span>
     </a>
 </li>

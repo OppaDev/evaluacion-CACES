@@ -56,9 +56,9 @@
 
         <!-- Logo -->
         <div class="d-flex align-items-center justify-content-between">
-            <a class="logo d-flex align-items-center">
-                <img src="https://www.espe.edu.ec/wp-content/uploads/2023/03/espe.png" alt="espe_logo">
-                <span class="d-none d-lg-block text-danger">MENU</span>
+            <a href="{{ route('home') }}" class="logo d-flex align-items-center">
+                <img src="https://www.espe.edu.ec/wp-content/uploads/2023/03/espe.png" alt="ESPE Logo">
+                <span class="d-none d-lg-block">ESPE</span>
             </a>
             <i class="bi bi-list toggle-sidebar-btn  "></i>
         </div><!-- Fin Logo -->
