@@ -33,7 +33,7 @@ class DashboardController extends Controller
         } 
         // SedeR ve solo sus sedes asignadas
         elseif ($user->hasRole('SedeR')) {
-            $universidades = $user->universidades;
+            $universidades = $user->sedeResponsable;
         } 
         // Otros roles (CriteriaR, IndicatorR) ven donde tienen asignaciones (simplificado: ven todas por ahora o vacio?)
         // Por seguridad y simplicidad inicial, si tienen asignaciones deberían ver la universidad padre.

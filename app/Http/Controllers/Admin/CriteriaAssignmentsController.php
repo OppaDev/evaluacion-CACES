@@ -31,15 +31,17 @@ class CriteriaAssignmentsController extends Controller
         // Si es SedeR, verificar que la evaluación pertenece a su universidad
         $user = auth()->user();
         if ($user->hasRole('SedeR')) {
-            $userUniversidadIds = $user->universidades->pluck('id')->toArray();
+            $userUniversidadIds = $user->sedeResponsable->pluck('id')->toArray();
             if (!in_array($evaluacion->uni_id, $userUniversidadIds)) {
                 abort(403, 'No tienes permiso para ver esta evaluación.');
             }
         }
         
-        // Usuarios disponibles para asignar (todos excepto Admin)
+        // Usuarios disponibles para asignar (todos excepto Admin y que pertenezcan a la misma sede)
         $users = User::whereDoesntHave('roles', function ($query) {
             $query->where('name', 'Admin');
+        })->whereHas('universidades', function ($query) use ($evaluacion) {
+            $query->where('id', $evaluacion->uni_id);
         })->get();
         
         $responsable = User::where('id',);
@@ -59,6 +61,13 @@ class CriteriaAssignmentsController extends Controller
     public function store(Request $request)
     {
         $userId = $request->user_id;
+
+        // Validar si SedeR intenta autoasignarse
+        if (auth()->user()->hasRole('SedeR') && auth()->id() == $userId) {
+            session()->flash('error', 'No tiene permisos para autoasignarse criterios.');
+            return redirect()->back();
+        }
+
         $criterioId = $request->cri_id;
         $evaluacionId = $request->eva_id;
         $rolName = 'CriteriaR';

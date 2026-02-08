@@ -54,16 +54,21 @@ class User extends Authenticatable
 		return $this->belongsToMany(Universidad::class, 'user_has_universidads', 'use_id', 'uni_id');
 	}
 
+    public function sedeResponsable()
+    {
+        return $this->belongsToMany(Universidad::class, 'user_has_seder_universidads', 'use_id', 'uni_id');
+    }
+
 	/**
 	 * Verifica si un usuario SedeR puede ser asignado a una nueva universidad
-	 * Regla: Un SedeR solo puede tener UNA universidad asignada
+	 * Regla: Un SedeR solo puede tener UNA universidad asignada como responsable
 	 */
 	public function canAssignUniversidad(): bool
 	{
 		if (!$this->hasRole('SedeR')) {
-			return true; // No es SedeR, puede tener múltiples universidades
+			return true; 
 		}
-		return $this->universidades()->count() === 0;
+		return $this->sedeResponsable()->count() === 0;
 	}
 
 	/**
@@ -75,7 +80,7 @@ class User extends Authenticatable
 		if (!$this->hasRole('SedeR')) {
 			return null;
 		}
-		return $this->universidades()->first();
+		return $this->sedeResponsable()->first();
 	}
 
 	/**
@@ -84,10 +89,10 @@ class User extends Authenticatable
 	 */
 	public function assignUniversidadSede(Universidad $universidad): void
 	{
-		if ($this->hasRole('SedeR') && $this->universidades()->count() > 0) {
+		if ($this->hasRole('SedeR') && $this->sedeResponsable()->count() > 0) {
 			throw new \Exception('Un SedeR solo puede tener una universidad asignada. Primero debe remover la actual.');
 		}
-		$this->universidades()->sync([$universidad->id]);
+		$this->sedeResponsable()->sync([$universidad->id]);
 	}
 	
 }

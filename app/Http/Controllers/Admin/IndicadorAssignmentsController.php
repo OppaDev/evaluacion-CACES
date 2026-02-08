@@ -30,15 +30,17 @@ class IndicadorAssignmentsController extends Controller
         // Si es SedeR, verificar que la evaluación pertenece a su universidad
         $currentUser = auth()->user();
         if ($currentUser->hasRole('SedeR')) {
-            $userUniversidadIds = $currentUser->universidades->pluck('id')->toArray();
+            $userUniversidadIds = $currentUser->sedeResponsable->pluck('id')->toArray();
             if (!in_array($evaluacion->uni_id, $userUniversidadIds)) {
                 abort(403, 'No tienes permiso para ver esta evaluación.');
             }
         }
         
-        // Usuarios disponibles para asignar (todos excepto Admin)
+        // Usuarios disponibles para asignar (todos excepto Admin y que pertenezcan a la misma sede)
         $users = User::whereDoesntHave('roles', function ($query) {
             $query->where('name', 'Admin');
+        })->whereHas('universidades', function ($query) use ($evaluacion) {
+            $query->where('id', $evaluacion->uni_id);
         })->get();
         
         $responsable = User::where('id',);
@@ -61,6 +63,13 @@ class IndicadorAssignmentsController extends Controller
         $permisos = [];
         $criterios = Criterio::all();
         $userId = $request->user_id;
+
+        // Validar si SedeR intenta autoasignarse
+        if (auth()->user()->hasRole('SedeR') && auth()->id() == $userId) {
+            session()->flash('error', 'No tiene permisos para autoasignarse indicadores.');
+            return redirect()->back();
+        }
+        
         $indicadorId = $request->ind_id;
         $evaluacionId = $request->eva_id;
         $indicador = Indicador::where('id', $indicadorId)->first();

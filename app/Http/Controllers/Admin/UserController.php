@@ -35,15 +35,21 @@ class UserController extends Controller
         $universidad = Universidad::find($request->universidad_id);
 
         // Validar que el usuario no sea ya SedeR con otra universidad
-        if ($user->hasRole('SedeR') && $user->universidades()->count() > 0) {
+        if ($user->hasRole('SedeR') && $user->sedeResponsable()->count() > 0) {
             session()->flash('error', 'Este usuario ya es SedeR de otra universidad. Primero debe removerlo.');
+            return redirect()->route('users');
+        }
+
+        // Validar que el usuario pertenezca a la sede seleccionada (Sede Registro)
+        if (!$user->universidades->contains($universidad->id)) {
+            session()->flash('error', 'El usuario no pertenece a la sede seleccionada. Debe estar registrado en ella primero.');
             return redirect()->route('users');
         }
 
         // Asignar rol y universidad
         $user->removeRole('Viewer');
         $user->assignRole('SedeR');
-        $user->universidades()->sync([$universidad->id]);
+        $user->sedeResponsable()->sync([$universidad->id]);
 
         session()->flash('success', "Usuario asignado como SedeR de {$universidad->universidad}.");
         return redirect()->route('users');
@@ -60,7 +66,7 @@ class UserController extends Controller
         }
 
         $user->removeRole('SedeR');
-        $user->universidades()->detach();
+        $user->sedeResponsable()->detach();
         $user->assignRole('Viewer');
 
         session()->flash('success', 'Rol SedeR removido correctamente. Usuario vuelve a ser Viewer.');
