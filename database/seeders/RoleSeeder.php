@@ -30,6 +30,7 @@ class RoleSeeder extends Seeder
 
         
         $admin=Role::create(['name' => 'Admin']);
+        $sede_r=Role::create(['name'=> 'SedeR']); // Responsable de Sede
         $criteria_r=Role::create(['name'=> 'CriteriaR']);
         $indicator_r=Role::create(['name'=> 'IndicatorR']);   
         $viewer=Role::create(['name'=> 'Viewer']);   

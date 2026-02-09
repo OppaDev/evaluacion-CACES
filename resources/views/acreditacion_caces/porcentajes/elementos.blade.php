@@ -1,136 +1,130 @@
-@extends('layouts.caces')
-@section('sidebar')
-    @include('layouts.sidebar_porcentajes')
+@extends('layouts.modern')
+
+@section('title', 'Porcentajes de Elementos')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('universidades.index') }}">Sedes</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('porcentaje.criterios.index') }}">Porcentajes</a></li>
+    <li class="breadcrumb-item active">Elementos Fundamentales</li>
 @endsection
+
 @section('content')
-    <div class="pagetitle">
-        <h3>PORCENTAJES DE LOS ELEMENTOS FUNDAMENTALES</h3>
+<div class="page-header animate-fade-in">
+    <div>
+        <h1>Porcentajes de Elementos Fundamentales</h1>
+        <p class="text-muted mb-0">Configurar el peso de cada elemento fundamental</p>
+    </div>
+</div>
+
+<form action="{{ route('porcentaje.elementos.store') }}" method="post" enctype="multipart/form-data">
+    @csrf
+    <div class="d-flex justify-content-between align-items-center mb-4 animate-fade-in">
+        <button type="submit" class="btn-modern btn-primary-modern">
+            <i class="bi bi-check-circle me-1"></i> Guardar Cambios
+        </button>
     </div>
 
-
-    <!-- Tabla -->
-    <form action="{{ route('porcentaje.elementos.store') }}" method="post" enctype="multipart/form-data">
-        @csrf
-        <div class="row justify-content-between">
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-crear mb-4"><i class="bi bi-check-circle"></i>
-                    GUARDAR</button>
-            </div>
-            <div class="col-md-4">
-                @if ($message = Session::get('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="bi bi-check-circle me-1"></i>
-                        {{ $message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-                @if ($message = Session::get('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="bi bi-x-circle me-1"></i>
-                        {{ $message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-            </div>
+    @foreach ($criterios as $criterio)
+    <div class="card-modern mb-4 animate-fade-in">
+        <div class="card-header" style="background: var(--espe-green); color: white;">
+            <h5 class="mb-0">
+                <i class="bi bi-clipboard-data me-2"></i>{{ $criterio->criterio }}
+                <span class="badge bg-white text-success ms-2">{{ $criterio->porcentaje }}%</span>
+            </h5>
         </div>
-        @foreach ($criterios as $criterio)
-        <div class="card">
-            <div class="card-header pb-2">
-                <h6 class="fw-normal text-pacifico text-uppercase">{{ $criterio->criterio }} <span
-                        class="text-danger">{{ $criterio->porcentaje }}</span></h6>
-            </div>
-            <div class="card-body mt-3">
-                @if ($criterio->subcriterios->isEmpty())
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="card-body">
+            @if ($criterio->subcriterios->isEmpty())
+                @if ($criterio->indicadors->isEmpty())
+                    <div class="alert alert-warning mb-0">
                         <i class="bi bi-exclamation-triangle me-1"></i>
-                        No hay subcriterios registrados para este criterio.
+                        No hay indicadores registrados para este criterio.
                     </div>
-                    @if ($criterio->indicadors->isEmpty())
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="bi bi-exclamation-triangle me-1"></i>
-                            No hay indicadores registrados para este criterio.
-                        </div>
-                    @else
-                        @foreach ($criterio->indicadors as $indicador)
-                        @if (!$indicador->elemento_fundamentals->isEmpty())
-                            <h6>{{ $indicador->indicador }} <span
-                                    class="text-danger">{{ $indicador->porcentaje }}</span></h6>
-                            <table class="table table-hover align-middle text-uppercase pt-2 pb-2">
-                                <thead class="table-pacifico">
-                                    <tr>
-                                        <th width=''>No</th>
-                                        <th width=''>Elementos fundamentales</th>
-                                        <th width='100px'>Porcentaje</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $totalElementos = count($indicador->elemento_fundamentals);
-                                    @endphp
-                                    @foreach ($indicador->elemento_fundamentals as $elementoFundamental)
-                                        <tr>
-                                            <td>{{ $loop->index + 1 }}</td>
-                                            <td>{{ $elementoFundamental->elemento }}</td>
-                                            <td><input
-                                                    class="form-control form-control-sm {{ empty($elementoFundamental->porcentaje) ? 'alert-danger' : '' }}"
-                                                    type="number" min=0 max=100 step="0.001"
-                                                    name="{{ $elementoFundamental->id }}[porcentaje]"
-                                                    value="{{ isset($elementoFundamental->porcentaje) ? $elementoFundamental->porcentaje : round($indicador->porcentaje / $totalElementos, 3) }}">
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>                        
-                        @endif
-                        @endforeach
-                    @endif
                 @else
-                    @foreach ($criterio->subcriterios as $subcriterio)
-                        <h6>{{ $subcriterio->subcriterio }} <span
-                                class="text-danger">{{ $subcriterio->porcentaje }}</span></h6>
-                        @foreach ($subcriterio->indicadors as $indicador)
+                    @foreach ($criterio->indicadors as $indicador)
                         @if (!$indicador->elemento_fundamentals->isEmpty())
-                            <h6>{{ $indicador->indicador }} <span
-                                    class="text-danger">{{ $indicador->porcentaje }}</span></h6>
-                            <table class="table table-hover align-middle text-uppercase pt-2 pb-2">
-                                <thead class="table-pacifico">
-                                    <tr>
-                                        <th width=''>No</th>
-                                        <th width=''>Elementos fundamentales</th>
-                                        <th width='100px'>Porcentaje</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $totalElementos = $indicador->elemento_fundamentals->count();
-                                    @endphp
-                                    @foreach ($indicador->elemento_fundamentals as $elementoFundamental)
-                                        <tr>
-                                            <td>{{ $loop->index + 1 }}</td>
-                                            <td>{{ $elementoFundamental->elemento }}</td>
-                                            <td><input
-                                                    class="form-control form-control-sm {{ empty($elementoFundamental->porcentaje) ? 'alert-danger' : '' }}"
-                                                    type="number" min=0 max=100 step="0.001"
-                                                    name="{{ $elementoFundamental->id }}[porcentaje]"
-                                                    value="{{ isset($elementoFundamental->porcentaje) ? $elementoFundamental->porcentaje : round($indicador->porcentaje / $totalElementos, 3) }}">
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            @endif
-                        @endforeach
+                            <div class="mb-4">
+                                <h6 class="text-muted mb-3">
+                                    <i class="bi bi-graph-up me-1"></i>{{ $indicador->indicador }}
+                                    <span class="badge-modern badge-info ms-2">{{ $indicador->porcentaje }}%</span>
+                                </h6>
+                                <div class="table-responsive">
+                                    <table class="table-modern">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 60px;">No</th>
+                                                <th>Elemento Fundamental</th>
+                                                <th style="width: 150px;">Porcentaje (%)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php $totalElementos = count($indicador->elemento_fundamentals); @endphp
+                                            @foreach ($indicador->elemento_fundamentals as $elementoFundamental)
+                                            <tr>
+                                                <td><span class="badge-modern badge-secondary">{{ $loop->iteration }}</span></td>
+                                                <td><span class="fw-medium">{{ $elementoFundamental->elemento }}</span></td>
+                                                <td>
+                                                    <input class="form-control {{ empty($elementoFundamental->porcentaje) ? 'border-danger' : '' }}"
+                                                           type="number" min="0" max="100" step="0.001"
+                                                           name="{{ $elementoFundamental->id }}[porcentaje]"
+                                                           value="{{ isset($elementoFundamental->porcentaje) ? $elementoFundamental->porcentaje : round($indicador->porcentaje / $totalElementos, 3) }}">
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        @endif
                     @endforeach
                 @endif
-            </div>
+            @else
+                @foreach ($criterio->subcriterios as $subcriterio)
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-3">
+                            <i class="bi bi-diagram-3 me-1"></i>{{ $subcriterio->subcriterio }}
+                            <span class="badge-modern badge-info ms-2">{{ $subcriterio->porcentaje }}%</span>
+                        </h6>
+                        @foreach ($subcriterio->indicadors as $indicador)
+                            @if (!$indicador->elemento_fundamentals->isEmpty())
+                                <div class="mb-3 ms-4">
+                                    <h6 class="small text-muted mb-2">
+                                        <i class="bi bi-graph-up me-1"></i>{{ $indicador->indicador }}
+                                        <span class="badge-modern badge-secondary ms-1">{{ $indicador->porcentaje }}%</span>
+                                    </h6>
+                                    <div class="table-responsive">
+                                        <table class="table-modern">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 60px;">No</th>
+                                                    <th>Elemento Fundamental</th>
+                                                    <th style="width: 150px;">Porcentaje (%)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php $totalElementos = $indicador->elemento_fundamentals->count(); @endphp
+                                                @foreach ($indicador->elemento_fundamentals as $elementoFundamental)
+                                                <tr>
+                                                    <td><span class="badge-modern badge-secondary">{{ $loop->iteration }}</span></td>
+                                                    <td><span class="fw-medium">{{ $elementoFundamental->elemento }}</span></td>
+                                                    <td>
+                                                        <input class="form-control {{ empty($elementoFundamental->porcentaje) ? 'border-danger' : '' }}"
+                                                               type="number" min="0" max="100" step="0.001"
+                                                               name="{{ $elementoFundamental->id }}[porcentaje]"
+                                                               value="{{ isset($elementoFundamental->porcentaje) ? $elementoFundamental->porcentaje : round($indicador->porcentaje / $totalElementos, 3) }}">
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                @endforeach
+            @endif
         </div>
-        @endforeach
-    </form>
-    <!-- Fin Tabla -->
-
-@endsection
-@section('scripts')
-    <script>
-        document.getElementById('porcentaje_elementos').classList.remove('collapsed');
-    </script>
+    </div>
+    @endforeach
+</form>
 @endsection

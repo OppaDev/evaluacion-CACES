@@ -183,9 +183,13 @@
                         @include('livewire.form')
                     </div>
                 </div>
-                <div class="modal-footer justify-content-right">
-                    <button type="button" wire:click.prevent="crearTarea()" class="btn btn-actualizar"><i
-                            class="bi bi-check-circle"></i> ACTUALIZAR</button>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" wire:click.prevent="crearTarea()" class="btn btn-actualizar">
+                        <i class="bi bi-check-circle"></i> GUARDAR
+                    </button>
+                    <button type="button" wire:click.prevent="cancel()" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> CANCELAR
+                    </button>
                 </div>
             </div>
         </div>
@@ -193,13 +197,14 @@
 </div>
 @push('scripts')
 <script>
-    document.addEventListener('close-modal', event => {
-        $('#assign_tarea_{{ $ind_id }}').modal('hide');
-    });
-    Livewire.on('refreshComponent', () => {
-        Livewire.components.components.forEach(component => {
-            component.call('render');
+    (function() {
+        document.addEventListener('close-modal', function(event) {
+            var el = document.getElementById('assign_tarea_{{ $ind_id }}');
+            if (el) {
+                var instance = bootstrap.Modal.getInstance(el);
+                if (instance) instance.hide();
+            }
         });
-    });
+    })();
 </script>
 @endpush

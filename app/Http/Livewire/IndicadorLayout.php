@@ -23,8 +23,26 @@ class IndicadorLayout extends Component
 
     public function guardarObservacion($ele_id){
         $this->validate([
-            "observacion.$ele_id" => 'required|string'
+            "observacion.$ele_id" => 'nullable|string'
         ]);
+
+        try {
+            $resultado = Resultado::where('ele_id', $ele_id)
+                ->where('eva_id', $this->eva_id)
+                ->where('ele_ind_id', $this->ind_id)
+                ->first();
+
+            if ($resultado) {
+                $resultado->update(['observacion' => $this->observacion[$ele_id]]);
+                session()->flash('success', 'Observación guardada correctamente.');
+            } else {
+                session()->flash('info', 'La observación se guardará al guardar el indicador.');
+            }
+        } catch (\Throwable $th) {
+            session()->flash('error', 'Error al guardar la observación.');
+        }
+
+        $this->dispatchBrowserEvent('close-modal');
     }
 
     public function mount($id_indicador, $id_evaluacion)

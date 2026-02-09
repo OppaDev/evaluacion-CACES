@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function index(){
-        $users = User::all();
+        $users = User::with(['universidades', 'sedesResponsable', 'roles'])->get();
         $universidades = Universidad::all();
         return view('auth.users', compact(['users', 'universidades']));
     }

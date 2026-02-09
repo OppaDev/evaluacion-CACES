@@ -12,9 +12,13 @@
                     @include('livewire.form')
                 </div>
             </div>
-            <div class="modal-footer justify-content-right">
-                <button type="button" wire:click.prevent="save()" class="btn btn-actualizar"><i
-                        class="bi bi-check-circle"></i> ACTUALIZAR</button>
+            <div class="modal-footer justify-content-center">
+                <button type="button" wire:click.prevent="save()" class="btn btn-actualizar">
+                    <i class="bi bi-check-circle"></i> GUARDAR
+                </button>
+                <button type="button" wire:click.prevent="cancel()" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> CANCELAR
+                </button>
             </div>
         </div>
     </div>

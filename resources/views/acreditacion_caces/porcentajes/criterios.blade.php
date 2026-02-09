@@ -1,78 +1,62 @@
-@extends('layouts.caces')
-@section('sidebar')
-    @include('layouts.sidebar_porcentajes')
-@endsection
-@section('content')
-    <div class="pagetitle">
-        <h3>PORCENTAJES DE LOS CRITERIOS</h3>
-    </div>
+@extends('layouts.modern')
 
-    <div class="card">
-        <div class="card-header pb-2">
-            <h6 class="fw-normal text-pacifico text-uppercase">Criterios</h6>
-        </div>
-        <div class="card-body mt-3">
-            <!-- Tabla -->
-            <form action="{{ route('porcentaje.criterios.store') }}" method="post" enctype="multipart/form-data">
-                @csrf
-                <div class="row justify-content-between">
-                    <div class="col-md-3">
-                        <button type="submit" class="btn btn-crear mb-4"><i class="bi bi-check-circle"></i>
-                            GUARDAR</button>
-                    </div>
-                    <div class="col-md-4">
-                        @if ($message = Session::get('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <i class="bi bi-check-circle me-1"></i>
-                                {{ $message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if ($message = Session::get('error'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <i class="bi bi-x-circle me-1"></i>
-                                {{ $message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-                <table class="table table-hover align-middle text-uppercase pt-2 pb-2">
-                    <thead class="table-pacifico">
+@section('title', 'Porcentajes de Criterios')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('universidades.index') }}">Sedes</a></li>
+    <li class="breadcrumb-item active">Porcentajes de Criterios</li>
+@endsection
+
+@section('content')
+<div class="page-header animate-fade-in">
+    <div>
+        <h1>Porcentajes de Criterios</h1>
+        <p class="text-muted mb-0">Configurar el peso de cada criterio en la evaluación</p>
+    </div>
+</div>
+
+<div class="card-modern animate-fade-in">
+    <div class="card-header">
+        <h5><i class="bi bi-percent me-2"></i>Configuración de Porcentajes</h5>
+    </div>
+    <div class="card-body">
+        <form action="{{ route('porcentaje.criterios.store') }}" method="post" enctype="multipart/form-data">
+            @csrf
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <button type="submit" class="btn-modern btn-primary-modern">
+                    <i class="bi bi-check-circle me-1"></i> Guardar Cambios
+                </button>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table-modern">
+                    <thead>
                         <tr>
-                            <th width=''>No</th>
-                            <th width=''>Criterio</th>
-                            <th width='100px'>Porcentaje</th>
+                            <th style="width: 60px;">No</th>
+                            <th>Criterio</th>
+                            <th style="width: 150px;">Porcentaje (%)</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php
-                            $totalCriterios = count($criterios) ;
+                            $totalCriterios = count($criterios);
                         @endphp
-
                         @foreach ($criterios as $criterio)
                         <tr>
-                            <td>{{ $loop->index + 1 }}</td>
-                            <td>{{ $criterio->criterio }}</td>
-                            <td><input
-                                    class="form-control form-control-sm {{ empty($criterio->porcentaje) ? 'alert-danger' : '' }}"
-                                    type="number" min=0 max=100 step="0.001"
-                                    name="{{ $criterio->id }}[porcentaje]"
-                                    value="{{ isset($criterio->porcentaje) ? $criterio->porcentaje : round(100 / $totalCriterios, 3) }}">
+                            <td><span class="badge-modern badge-secondary">{{ $loop->iteration }}</span></td>
+                            <td><span class="fw-medium">{{ $criterio->criterio }}</span></td>
+                            <td>
+                                <input class="form-control {{ empty($criterio->porcentaje) ? 'border-danger' : '' }}" 
+                                       type="number" min="0" max="100" step="0.001"
+                                       name="{{ $criterio->id }}[porcentaje]"
+                                       value="{{ isset($criterio->porcentaje) ? $criterio->porcentaje : round(100 / $totalCriterios, 3) }}">
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
-            </form>
-            <!-- Fin Tabla -->
-        </div>
+            </div>
+        </form>
     </div>
-@endsection
-@section('scripts')
-    <script>
-        document.getElementById('porcentaje_criterios').classList.remove('collapsed');
-    </script>
+</div>
 @endsection

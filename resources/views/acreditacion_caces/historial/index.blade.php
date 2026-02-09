@@ -1,43 +1,48 @@
-@extends('layouts.caces')
-@section('sidebar')
-    @include('layouts.sidebar_evaluacion')
+@extends('layouts.modern')
+
+@section('title', 'Análisis Histórico')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('universidades.index') }}">Sedes</a></li>
+    <li class="breadcrumb-item active">Análisis Histórico</li>
 @endsection
+
 @section('content')
-    <div class="pagetitle">
-        <h3>ANÁLISIS HISTORICO DE LOS ELEMENTOS FUNDAMENTALES</h3>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active">Análisis Histórico</li>
-            </ol>
-        </nav>
+<div class="page-header animate-fade-in">
+    <div>
+        <h1>Análisis Histórico de Elementos Fundamentales</h1>
+        <p class="text-muted mb-0">Comparativa de valoraciones entre períodos de evaluación</p>
     </div>
-    {{-- ///////////////////////////////////////////////// --}}
-    @php
-        $totalCriterios = count($criterios) - 1;
-    @endphp
-    @foreach ($criterios as $criterio)
-        @if (!$loop->last)
-            <div class="card">
-                <div class="card-header pb-2">
-                    <h4 class="fw-normal text-pacifico text-uppercase">CRITERIO {{ $criterio->id }}:
-                        {{ $criterio->criterio }}</h4>
-                </div>
-                <div class="card-body mt-3">
+</div>
+
+@php
+    $totalCriterios = count($criterios) - 1;
+@endphp
+@foreach ($criterios as $criterio)
+    @if (!$loop->last)
+        <div class="card-modern mb-4 animate-fade-in">
+            <div class="card-header" style="background: var(--espe-green); color: white;">
+                <h5 class="mb-0">
+                    <i class="bi bi-clipboard-data me-2"></i>CRITERIO {{ $criterio->id }}: {{ $criterio->criterio }}
+                </h5>
+            </div>
+            <div class="card-body">
                     @if ($criterio->subcriterios->isEmpty())
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <div class="alert alert-warning mb-3">
                             <i class="bi bi-exclamation-triangle me-1"></i>
                             No hay subcriterios registrados para este criterio.
                         </div>
                         @if ($criterio->indicadors->isEmpty())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <div class="alert alert-warning mb-0">
                                 <i class="bi bi-exclamation-triangle me-1"></i>
-                                No hay indicadors registrados para este criterio.
+                                No hay indicadores registrados para este criterio.
                             </div>
                         @else
                             @foreach ($criterio->indicadors as $indicador)
-                                <h6 class="text-crear">{{ $indicador->indicador }}</h6>
-                                <table class="table table-hover align-middle text-uppercase pt-2 pb-2">
-                                    <thead class="table-pacifico">
+                                <h6 class="fw-medium text-muted mb-3"><i class="bi bi-graph-up me-1"></i>{{ $indicador->indicador }}</h6>
+                                <div class="table-responsive mb-4">
+                                <table class="table-modern">
+                                    <thead>
                                         <tr>
                                             <th width=''>No</th>
                                             <th width=''>Elementos fundamentales</th>
@@ -661,11 +666,4 @@
             </div>
         @endif
     @endforeach
-
-    {{-- //////////////////////////////////////////////// --}}
-@endsection
-@section('scripts')
-    <script>
-        document.getElementById('historico').classList.remove('collapsed');
-    </script>
 @endsection

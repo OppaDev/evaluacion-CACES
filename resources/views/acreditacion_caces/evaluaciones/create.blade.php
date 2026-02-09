@@ -1,38 +1,42 @@
-@extends('layouts.caces')
-@section('sidebar')
-@include('layouts.sidebar_evaluacion')
+@extends('layouts.modern')
+
+@section('title', 'Nueva Evaluación')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('universidades.index') }}">Sedes</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('evaluaciones.show', $universidad->id) }}">{{ $universidad->sede }}</a></li>
+    <li class="breadcrumb-item active">Nueva Evaluación</li>
 @endsection
+
 @section('content')
-    <div class="pagetitle">
-        <h3>UNIVERSIDADES</h3>
-        <nav>
-            <ol class="breadcrumb">                
-                <li class="breadcrumb-item"><a href="{{ route('universidades.index') }}">Universidades</a></li>
-                <li class="breadcrumb-item active">Nuevo registro</li>
-            </ol>
-        </nav>
+<div class="page-header animate-fade-in">
+    <div>
+        <h1>Crear Nueva Evaluación</h1>
+        <p class="text-muted mb-0">{{ $universidad->universidad }}</p>
     </div>
-    <div class="row justify-content-center">
-        <div class="card" style="width: 90%">
-            <div class="card-header pt-2 pb-1 mt-3">
-                <h6 class="fw-normal text-crear text-uppercase">Crear registro</h6>
+</div>
+
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-lg-8">
+        <div class="card-modern">
+            <div class="card-header">
+                <h5><i class="bi bi-plus-circle me-2"></i>Datos de la Evaluación</h5>
             </div>
-            <div class="container-fluid mt-3">
-                <form method="POST" action="{{ url('universidades') }}" enctype="multipart/form-data">
+            <div class="card-body">
+                <form method="POST" action="{{ route('evaluaciones.store', $universidad->id) }}" enctype="multipart/form-data">
                     @csrf
-                    @include('acreditacion_caces.universidades.form')
-                    <div class="modal-footer justify-content-center">
-                        <button type="submit" class="btn btn-crear"><i class="bi bi-check-circle"></i>
-                            GUARDAR</button>
-                        <a type="button" class="btn btn-outline-crear" href="{{ route('universidades.index') }}">CANCELAR</a>
+                    @include('acreditacion_caces.evaluaciones.form')
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <button type="submit" class="btn-modern btn-primary-modern">
+                            <i class="bi bi-check-circle me-1"></i> Guardar
+                        </button>
+                        <a href="{{ route('evaluaciones.show', $universidad->id) }}" class="btn-modern btn-secondary-modern">
+                            Cancelar
+                        </a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-@endsection
-@section('scripts')
-    <script>
-        document.getElementById('universidades').classList.remove('collapsed');
-    </script>
+</div>
 @endsection

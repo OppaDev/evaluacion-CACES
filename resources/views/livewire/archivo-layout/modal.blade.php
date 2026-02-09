@@ -11,9 +11,12 @@
             <div class="modal-body">
                 @include('livewire.archivo-layout.assign')
             </div>
-            <div class="modal-footer justify-content-right">
-                <button type="button" class="btn btn-outline-pacifico mb-4 btn-sm" data-bs-toggle="modal"
-                    data-bs-target="#add_file_{{ $fue_id }}"><i class="bi bi-plus">AGREGAR</i></button>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-pacifico btn-sm" data-bs-toggle="modal"
+                    data-bs-target="#add_file_{{ $fue_id }}"><i class="bi bi-plus"></i> AGREGAR</button>
+                <button type="button" wire:click.prevent="cancel()" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> CERRAR
+                </button>
             </div>
         </div>
     </div>

@@ -20,9 +20,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $sede
  * @property string|null $ciudad
  * @property string|null $informe
+ * @property int|null $responsable_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * 
+ * @property User|null $responsable
  * @property Collection|Evaluacion[] $evaluacions
  * @property Collection|User[] $users
  *
@@ -32,14 +34,24 @@ class Universidad extends Model
 {
 	protected $table = 'universidads';
 
+	protected $casts = [
+		'responsable_id' => 'int'
+	];
+
 	protected $fillable = [
 		'universidad',
 		'foto',
 		'campus',
 		'sede',
 		'ciudad',
-		'informe'
+		'informe',
+		'responsable_id'
 	];
+
+	public function responsable()
+	{
+		return $this->belongsTo(User::class, 'responsable_id');
+	}
 
 	public function evaluacions()
 	{

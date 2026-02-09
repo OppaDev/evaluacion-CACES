@@ -24,6 +24,7 @@ use Spatie\Permission\Traits\HasRoles;
  * 
  * @property Collection|Evaluacion[] $evaluacions
  * @property Collection|Universidad[] $universidads
+ * @property Collection|Universidad[] $sedesResponsable
  *
  * @package App\Models
  */
@@ -52,6 +53,30 @@ class User extends Authenticatable
 	public function universidades()
 	{
 		return $this->belongsToMany(Universidad::class, 'user_has_universidads', 'use_id', 'uni_id');
+	}
+
+	/**
+	 * Sedes de las que el usuario es responsable
+	 */
+	public function sedesResponsable()
+	{
+		return $this->hasMany(Universidad::class, 'responsable_id');
+	}
+
+	/**
+	 * Verificar si el usuario es responsable de alguna sede
+	 */
+	public function esResponsableSede(): bool
+	{
+		return $this->sedesResponsable()->exists();
+	}
+
+	/**
+	 * Verificar si el usuario es responsable de una sede específica
+	 */
+	public function esResponsableDeSede($uni_id): bool
+	{
+		return $this->sedesResponsable()->where('id', $uni_id)->exists();
 	}
 	
 }

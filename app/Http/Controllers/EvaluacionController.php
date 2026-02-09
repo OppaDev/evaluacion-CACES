@@ -28,7 +28,18 @@ class EvaluacionController extends Controller
         $evaluacion = $request->except('_token');
         $id = $request->uni_id;
         $evaluacion['fecha_creacion'] = date('Y-m-d');
-        $evaluacion['use_id'] = Auth::user()->id;
+        
+        // Obtener la universidad para verificar si tiene responsable de sede
+        $universidad = Universidad::find($id);
+        
+        // Si la universidad tiene un responsable de sede, asignarlo como responsable de la evaluación
+        if ($universidad && $universidad->responsable_id) {
+            $evaluacion['use_id'] = $universidad->responsable_id;
+        } else {
+            // Si no hay responsable de sede, usar el usuario actual
+            $evaluacion['use_id'] = Auth::user()->id;
+        }
+        
         Evaluacion::insert($evaluacion);
         return redirect()->route('evaluaciones.show', $id);
     } 

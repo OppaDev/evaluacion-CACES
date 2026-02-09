@@ -47,19 +47,21 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::middleware(['role:Admin|CriteriaR'])->group(function(){
+    // Rutas para Admin, SedeR y CriteriaR (asignar indicadores)
+    Route::middleware(['role:Admin|SedeR|CriteriaR', 'sede.access'])->group(function(){
         Route::resource('indicador-assignments', IndicadorAssignmentsController::class)->names('indicador.assignments');
+    });
+
+    // Rutas para Admin y SedeR (asignar criterios)
+    Route::middleware(['role:Admin|SedeR', 'sede.access'])->group(function(){
+        Route::resource('criteria-assignments', CriteriaAssignmentsController::class)->names('criteria.assignments');
     });
 
     // Bloquear solo las rutas específicas para Admin
     Route::middleware(['role:Admin'])->group(function () {
-
-        // Bloquear rutas de asignaciones
-        Route::resource('criteria-assignments', CriteriaAssignmentsController::class)->names('criteria.assignments');
-        Route::resource('indicador-assignments', IndicadorAssignmentsController::class)->names('indicador.assignments');
-
-        // Bloquear rutas de criterios
-        Route::get('{eva_id}/criterio/{cri_id}', [CriterioController::class, 'criterio'])->name('criterio');
+        
+        // Asignar responsable de sede (solo Admin)
+        Route::post('universidades/{id}/asignar-responsable', [UniversidadController::class, 'asignarResponsable'])->name('universidades.asignar-responsable');
 
         //Manipular usuarios
         Route::get('users', [UserController::class, 'index'])->name('users');
@@ -73,51 +75,47 @@ Route::middleware(['auth'])->group(function () {
         //bloquear ruta editar y update:
         Route::get('evaluaciones/{id}/edit', [EvaluacionController::class, 'edit'])->name('evaluaciones.edit');
 
-        // Bloquear ruta de indicadores
-        //Route::get('{id}/indicadores', [IndicadorController::class, 'index'])->name('indicadores.index');
         // CONFIGURACION DE PORCENTAJES
         Route::resource('porcentaje/criterios', PorcentajeCriterioController::class)->names('porcentaje.criterios');
         Route::resource('porcentaje/subcriterios', PorcentajeSubcriterioController::class)->names('porcentaje.subcriterios');
         Route::resource('porcentaje/indicadores', PorcentajeIndicadorController::class)->names('porcentaje.indicadores');
         Route::resource('porcentaje/elementos', PorcentajeElementoController::class)->names('porcentaje.elementos');
-
-                  
     
     });
+
     Route::resource('universidades', controller: UniversidadController::class)->except(['create'])->names('universidades');
 
 
     //Route::resource('universidades', UniversidadController::class)->names('universidades');
 
-    //PARA CREAR LAS EVALUACIONES
-    Route::resource('evaluaciones', EvaluacionController::class)->names('evaluaciones');
+    // =====================================================
+    // RUTAS PROTEGIDAS POR ACCESO A SEDE
+    // =====================================================
+    Route::middleware(['sede.access'])->group(function () {
+        //PARA CREAR LAS EVALUACIONES
+        Route::resource('evaluaciones', EvaluacionController::class)->names('evaluaciones');
 
-    // PARA CREAR LA COMPARATIVA DE LOS VALORES
-    Route::get('historico-grafico/{id}', [HistoricoController::class, 'grafico'])->name('historico.grafico.index');
-    Route::get('historico/{id}', [HistoricoController::class, 'index'])->name('historico.index');
+        // PARA CREAR LA COMPARATIVA DE LOS VALORES
+        Route::get('historico-grafico/{id}', [HistoricoController::class, 'grafico'])->name('historico.grafico.index');
+        Route::get('historico/{id}', [HistoricoController::class, 'index'])->name('historico.index');
 
+        // INDICADORES
+        Route::get('{id}/indicadores', [IndicadorController::class, 'index'])->name('indicadores.index');
 
-    // INDICADORES
-    Route::get('{id}/indicadores', [IndicadorController::class, 'index'])->name('indicadores.index');
+        //INFORMES
+        Route::get('informes-criterios/{id}', [InformesCriteriosController::class, 'index'])->name('informes.criterios.index');
+        Route::get('informes-oportunidad-mejora/{id}', [InformesCriteriosController::class, 'mejora'])->name('informes.mejora');
 
-    //INFORMES
-    Route::get('informes-criterios/{id}', [InformesCriteriosController::class, 'index'])->name('informes.criterios.index');
-    Route::get('informes-oportunidad-mejora/{id}', [InformesCriteriosController::class, 'mejora'])->name('informes.mejora');
+        //RESULTADOS
+        Route::get('{eva_id}/indicadores/{cri_id}', [IndicadorController::class, 'resultadoCriterio'])->name('resultado');
 
-    //RESULTADOS
-    Route::get('{eva_id}/indicadores/{cri_id}', [IndicadorController::class, 'resultadoCriterio'])->name('resultado');
+        //INFORMES PDF
+        Route::get('informes/informe-general/{id}', [InformesCriteriosController::class, 'informeGeneralPdf'])->name('personal.academico.informeGeneral');
+        Route::get('informes/informe-especifico/{id}', [InformesCriteriosController::class, 'informeEspecificoPdf'])->name('personal.academico.informeEspecifico');
 
-    //INFORMES
-    Route::get('informes/informe-general/{id}', [InformesCriteriosController::class, 'informeGeneralPdf'])->name('personal.academico.informeGeneral');
-    Route::get('informes/informe-especifico/{id}', [InformesCriteriosController::class, 'informeEspecificoPdf'])->name('personal.academico.informeEspecifico');
-
-    //Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-
-    //Route::resource('criteria-assignments', CriteriaAssignmentsController::class)->names('criteria.assignments');
-    //Route::resource('indicador-assignments', IndicadorAssignmentsController::class)->names('indicador.assignments');
-
-    //////////////////////////////////////////////////LIVEWIRE//////////////////////////////////////////////
-    Route::get('{eva_id}/criterio/{cri_id}', [CriterioController::class, 'criterio'])->name('criterio');
+        //CRITERIO
+        Route::get('{eva_id}/criterio/{cri_id}', [CriterioController::class, 'criterio'])->name('criterio');
+    });
 });
 
 

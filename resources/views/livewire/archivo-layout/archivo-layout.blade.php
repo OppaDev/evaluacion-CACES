@@ -113,17 +113,16 @@
 
 @push('scripts')
 <script>
-    document.addEventListener('close-modal', event => {
-        $('#add_file_{{ $fue_id }}').modal('hide');
-        $('#assign_file_{{ $fue_id }}').modal('hide');
-        $('#editar_fuente_{{ $fue_id }}').modal('hide');
-        $('#borrar_fuente_{{ $fue_id }}').modal('hide');
-    });
-    Livewire.on('refreshComponent', () => {
-        console.log('hola');        
-        Livewire.components.components.forEach(component => {
-            component.call('render');
+    (function() {
+        document.addEventListener('close-modal', function(event) {
+            ['add_file_{{ $fue_id }}', 'assign_file_{{ $fue_id }}', 'editar_fuente_{{ $fue_id }}', 'borrar_fuente_{{ $fue_id }}'].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) {
+                    var instance = bootstrap.Modal.getInstance(el);
+                    if (instance) instance.hide();
+                }
+            });
         });
-    });
+    })();
 </script>
 @endpush

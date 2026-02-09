@@ -104,7 +104,7 @@
                     </td>
                     <td>
                         <div>
-                            <div class="modal fade" id="observacion{{$elementoFundamental->id}}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+                            <div wire:ignore.self class="modal fade" id="observacion{{$elementoFundamental->id}}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                                     <div class="modal-content">
@@ -115,9 +115,19 @@
                                         </div>
                                         <div class="modal-body">
                                             <textarea class="comentario form-control" id="comentario" rows="20"
-                                                wire:model.defer="observacion.{{ $elementoFundamental->id }}" placeholder="Comentario" @if(auth()->user()->hasRole('Viewer'))
+                                                wire:model.defer="observacion.{{ $elementoFundamental->id }}" placeholder="Escriba su observación aquí..." @if(auth()->user()->hasRole('Viewer'))
                                 disabled
                                 @endif></textarea>
+                                        </div>
+                                        <div class="modal-footer justify-content-center">
+                                            @if(!auth()->user()->hasRole('Viewer'))
+                                            <button type="button" wire:click.prevent="guardarObservacion({{ $elementoFundamental->id }})" class="btn btn-actualizar">
+                                                <i class="bi bi-check-circle"></i> GUARDAR
+                                            </button>
+                                            @endif
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                <i class="bi bi-x-circle"></i> CERRAR
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

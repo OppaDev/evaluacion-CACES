@@ -22,8 +22,15 @@
         <i class="bi bi-file-text"></i><span>Asignar Criterios</span>
     </a>
 </li>
+@elseif(auth()->user()->hasRole('SedeR') && auth()->user()->esResponsableDeSede($evaluacion->uni_id))
+<li class="nav-heading">Configuracion</li>
+<li class="nav-item">
+    <a class="nav-link collapsed" id="criteria-assignments" href="{{ route('criteria.assignments.show',$evaluacion->id)}}">
+        <i class="bi bi-file-text"></i><span>Asignar Criterios</span>
+    </a>
+</li>
 @endcan
-@if (auth()->user()->can('CriteriaR')||auth()->user()->can('admin'))
+@if (auth()->user()->can('CriteriaR') || auth()->user()->can('admin') || (auth()->user()->hasRole('SedeR') && auth()->user()->esResponsableDeSede($evaluacion->uni_id)))
 <li class="nav-item">
     <a class="nav-link collapsed" id="indicador-assignments" href="{{ route('indicador.assignments.show',$evaluacion->id)}}">
         <i class="bi bi-file-text"></i><span>Asignar Indicadores</span>
