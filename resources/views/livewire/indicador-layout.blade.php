@@ -97,7 +97,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- ACCIONES DE MEJORA - Desactivado temporalmente (tabla tareas no existe)
+                    {{-- FIN ACORDION PARA FUENTES DE INFORMACION --}}
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading_tarea_{{ $indicador->id }}">
                             <button class="accordion-button collapsed" style="background: #c84239" type="button" data-bs-toggle="collapse"
@@ -113,8 +113,6 @@
                             </div>
                         </div>
                     </div>
-                    --}}
-                    {{-- FIN ACORDION PARA FUENTES DE INFORMACION --}}
                 </div>
             </div>
             @endif
@@ -187,7 +185,7 @@
                         </div>
                     </div>
                 </div>
-                {{-- ACCIONES DE MEJORA - Desactivado temporalmente (tabla tareas no existe)
+                {{-- ACCIONES DE MEJORA --}}
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading_tarea_{{ $indicador->id }}">
                         <button class="accordion-button collapsed" style="background: #c84239" type="button" data-bs-toggle="collapse"
@@ -203,7 +201,6 @@
                         </div>
                     </div>
                 </div>
-                --}}
                 {{-- FIN ACORDION PARA FUENTES DE INFORMACION --}}
             </div>
         </div>
