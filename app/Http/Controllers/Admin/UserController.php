@@ -10,66 +10,50 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $users = User::all();
         $universidades = Universidad::all();
         $roles = Role::all();
         return view('auth.users', compact(['users', 'universidades', 'roles']));
     }
-    
-    public function destroy(User $user){
+
+    public function destroy(User $user)
+    {
         $user->delete();
         session()->flash('success', 'Usuario eliminado correctamente.');
         return redirect()->route('users');
     }
 
     /**
-     * Asignar rol SedeR a un usuario y vincular con universidad
+     * Toggle rol SedeR: si ya es SedeR lo remueve, si no lo es lo asigna
+     * usando automáticamente la sede registrada del usuario.
      */
-    public function assignSedeR(Request $request, User $user)
+    public function toggleSedeR(User $user)
     {
-        $request->validate([
-            'universidad_id' => 'required|exists:universidads,id'
-        ]);
+        // Si ya es SedeR, remover el rol
+        if ($user->hasRole('SedeR')) {
+            $user->removeRole('SedeR');
+            $user->sedeResponsable()->detach();
+            $user->assignRole('Viewer');
 
-        $universidad = Universidad::find($request->universidad_id);
-
-        // Validar que el usuario no sea ya SedeR con otra universidad
-        if ($user->hasRole('SedeR') && $user->sedeResponsable()->count() > 0) {
-            session()->flash('error', 'Este usuario ya es SedeR de otra universidad. Primero debe removerlo.');
+            session()->flash('success', 'Rol SedeR removido correctamente. Usuario vuelve a ser Viewer.');
             return redirect()->route('users');
         }
 
-        // Validar que el usuario pertenezca a la sede seleccionada (Sede Registro)
-        if (!$user->universidades->contains($universidad->id)) {
-            session()->flash('error', 'El usuario no pertenece a la sede seleccionada. Debe estar registrado en ella primero.');
+        // Validar que el usuario tenga una sede registrada
+        $universidad = $user->universidades->first();
+        if (!$universidad) {
+            session()->flash('error', 'El usuario no tiene una sede registrada. Debe registrarse en una sede primero.');
             return redirect()->route('users');
         }
 
-        // Asignar rol y universidad
+        // Asignar rol y universidad automáticamente
         $user->removeRole('Viewer');
         $user->assignRole('SedeR');
         $user->sedeResponsable()->sync([$universidad->id]);
 
-        session()->flash('success', "Usuario asignado como SedeR de {$universidad->universidad}.");
-        return redirect()->route('users');
-    }
-
-    /**
-     * Remover rol SedeR de un usuario
-     */
-    public function removeSedeR(User $user)
-    {
-        if (!$user->hasRole('SedeR')) {
-            session()->flash('error', 'Este usuario no es SedeR.');
-            return redirect()->route('users');
-        }
-
-        $user->removeRole('SedeR');
-        $user->sedeResponsable()->detach();
-        $user->assignRole('Viewer');
-
-        session()->flash('success', 'Rol SedeR removido correctamente. Usuario vuelve a ser Viewer.');
+        session()->flash('success', "Usuario asignado como Responsable de {$universidad->sede}.");
         return redirect()->route('users');
     }
 }

@@ -48,13 +48,13 @@ Route::get('/home', [App\Http\Controllers\DashboardController::class, 'index'])-
 Route::middleware(['auth'])->group(function () {
 
     // Rutas para Admin y SedeR (asignaciones de criterios e indicadores)
-    Route::middleware(['role:Admin|SedeR'])->group(function(){
+    Route::middleware(['role:Admin|SedeR'])->group(function () {
         Route::resource('criteria-assignments', CriteriaAssignmentsController::class)->names('criteria.assignments');
         Route::resource('indicador-assignments', IndicadorAssignmentsController::class)->names('indicador.assignments');
     });
 
     // Rutas para Admin, SedeR y CriteriaR (asignación de indicadores)
-    Route::middleware(['role:Admin|SedeR|CriteriaR'])->group(function(){
+    Route::middleware(['role:Admin|SedeR|CriteriaR'])->group(function () {
         Route::resource('indicador-assignments', IndicadorAssignmentsController::class)->names('indicador.assignments');
     });
 
@@ -68,16 +68,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('users', [UserController::class, 'index'])->name('users');
         Route::patch('users/{user}', [UserController::class, 'update'])->name('users.update');
         Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-        
-        // Gestión de SedeR
-        Route::post('users/{user}/assign-seder', [UserController::class, 'assignSedeR'])->name('users.assign-seder');
-        Route::delete('users/{user}/remove-seder', [UserController::class, 'removeSedeR'])->name('users.remove-seder');
+
+        // Gestión de SedeR (toggle)
+        Route::post('users/{user}/toggle-seder', [UserController::class, 'toggleSedeR'])->name('users.toggle-seder');
 
         //Ruta registrar usuario
         Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
         Route::post('register', [RegisterController::class, 'register'])->name('register');
         Route::get('universidades/create', [UniversidadController::class, 'create'])->name('universidades.create');
-        
+
         //Ruta editar evaluaciones
         Route::get('evaluaciones/{id}/edit', [EvaluacionController::class, 'edit'])->name('evaluaciones.edit');
 
@@ -86,8 +85,6 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('porcentaje/subcriterios', PorcentajeSubcriterioController::class)->names('porcentaje.subcriterios');
         Route::resource('porcentaje/indicadores', PorcentajeIndicadorController::class)->names('porcentaje.indicadores');
         Route::resource('porcentaje/elementos', PorcentajeElementoController::class)->names('porcentaje.elementos');
-                  
-    
     });
     Route::resource('universidades', controller: UniversidadController::class)->except(['create'])->names('universidades');
 
@@ -124,8 +121,3 @@ Route::middleware(['auth'])->group(function () {
     //////////////////////////////////////////////////LIVEWIRE//////////////////////////////////////////////
     Route::get('{eva_id}/criterio/{cri_id}', [CriterioController::class, 'criterio'])->name('criterio');
 });
-
-
-
-
-

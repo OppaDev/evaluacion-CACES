@@ -144,7 +144,7 @@
                     <td>
                         <input type="text" class="form-control form-control-sm"
                             onkeyup="this.value = this.value.toUpperCase();" wire:model.defer="ind_val"
-                            placeholder="" style="color: {{($this->check)?"#008F39":"#8B0000"}}" readonly>
+                            placeholder="" style="color: {{ $this->check ? '#008F39' : '#8B0000' }}" readonly>
                     </td>
                 </tr>
             </tbody>
