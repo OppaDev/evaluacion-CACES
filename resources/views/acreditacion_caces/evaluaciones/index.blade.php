@@ -4,10 +4,11 @@
 @endsection
 @section('content')
 <div class="pagetitle">
-    <h3>EVALUACIONES</h3>
+<h3 class="text-center">EVALUACIONES SEDE {{ $universidad->sede }}</h3>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item active">Evaluaciones</li>
+            <li class="breadcrumb-item active">{{ $universidad->sede }}</li>
         </ol>
     </nav>
 </div>
@@ -65,13 +66,13 @@
                     @php
                     $hasPermission = false;
                     if(auth()->user()->hasRole('Viewer')){
-                        $contador += 1;
-                        $hasPermission = true;
+                    $contador += 1;
+                    $hasPermission = true;
                     }
                     // SedeR siempre tiene permiso para ver evaluaciones de su universidad
                     if(auth()->user()->hasRole('SedeR')){
-                        $contador += 1;
-                        $hasPermission = true;
+                    $contador += 1;
+                    $hasPermission = true;
                     }
                     foreach (auth()->user()->getAllPermissions() as $permission) {
                     if (Str::startsWith($permission->name, "$evaluacion->id/")||auth()->user()->can('admin')||Str::startsWith($permission->name, "$evaluacion->id-")) {
@@ -98,9 +99,9 @@
                         <td>
                             {{ $evaluacion->departamento }}
                         </td>
-                        
-                        <!-- <td>{{ $evaluacion->facultad }}</td> --> 
-                        
+
+                        <!-- <td>{{ $evaluacion->facultad }}</td> -->
+
                         {{-- Columna CONFIGURACIÓN (Solo Admin) --}}
                         @can('admin')
                         <td style="width: 120px;">
