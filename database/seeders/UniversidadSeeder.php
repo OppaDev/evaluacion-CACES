@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Universidad;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UniversidadSeeder extends Seeder
@@ -18,14 +17,27 @@ class UniversidadSeeder extends Seeder
         Universidad::create([
             'universidad' => 'UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE',
             'foto' => '',
-            'campus' => 'QUITO',
-            'sede' => 'QUITO',
-            'ciudad' => 'QUITO',
-            'facultad' => 'FACULTAD DE CIENCIAS ADMINISTRATIVAS Y ECONOMICAS',
-            'departamento' => 'ADMINISTRACION DE EMPRESAS',
-            'fecha_evaluacion' => '2024-08-21',
-            'evaluadores' => 'ING. MARCELO REA',
-            'contraparte' => 'ING. MARCELO REA',
+            'campus' => 'SANGOLQUI',
+            'sede' => 'SANGOLQUI',
+            'ciudad' => 'SANGOLQUI',
+            'informe' => '',
+        ]);
+
+        Universidad::create([
+            'universidad' => 'UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE',
+            'foto' => '',
+            'campus' => 'LATACUNGA',
+            'sede' => 'LATACUNGA',
+            'ciudad' => 'LATACUNGA',
+            'informe' => '',
+        ]);
+
+        Universidad::create([
+            'universidad' => 'UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE',
+            'foto' => '',
+            'campus' => 'SANTO DOMINGO',
+            'sede' => 'SANTO DOMINGO',
+            'ciudad' => 'SANTO DOMINGO',
             'informe' => '',
         ]);
     }

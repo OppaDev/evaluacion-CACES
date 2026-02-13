@@ -22,8 +22,9 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        $this->call([       
-            RoleSeeder::class,     
+        $this->call([
+            RoleSeeder::class,
+            UniversidadSeeder::class,
             UserSeeder::class,
             CriterioSeeder::class,
             SubcriterioSeeder::class,
@@ -31,8 +32,7 @@ class DatabaseSeeder extends Seeder
             ElementoFundamentalSeeder::class,
             FuenteInformacionSeeder::class,
             EscalaSeeder::class,
-            FormulaSeeder::class
-            // UniversidadSeeder::class,
+            FormulaSeeder::class,
             // ValidacionLineamientoSeeder::class
         ]);
     }
