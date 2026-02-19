@@ -30,17 +30,27 @@ class DashboardController extends Controller
         // Admin y Viewer ven todas las sedes
         if ($user->hasRole('Admin') || $user->hasRole('Viewer')) {
             $universidades = Universidad::all();
-        } 
+        }
         // SedeR ve solo sus sedes asignadas
         elseif ($user->hasRole('SedeR')) {
             $universidades = $user->sedeResponsable;
-        } 
-        // Otros roles (CriteriaR, IndicatorR) ven donde tienen asignaciones (simplificado: ven todas por ahora o vacio?)
-        // Por seguridad y simplicidad inicial, si tienen asignaciones deberían ver la universidad padre.
-        // Asumiendo que pueden ver todas por ahora para entrar a evaluaciones donde tienen permiso
+        }
+        // CriteriaR / IndicatorR: solo ven la sede de las evaluaciones donde tienen asignaciones
         else {
-            // Ajustar según necesidad real, por defecto ven todas pero luego se filtra en EvaluationController
-            $universidades = Universidad::all();
+            $evaluacionIds = $user->getAllPermissions()
+                ->pluck('name')
+                ->map(function ($name) {
+                    // Permisos dinámicos: "evaluacionId/criterioId" o "evaluacionId-indicadorId"
+                    if (preg_match('/^(\d+)[\/\-]/', $name, $matches)) {
+                        return (int) $matches[1];
+                    }
+                    return null;
+                })
+                ->filter()
+                ->unique();
+
+            $uniIds = \App\Models\Evaluacion::whereIn('id', $evaluacionIds)->pluck('uni_id')->unique();
+            $universidades = Universidad::whereIn('id', $uniIds)->get();
         }
 
         return view('dashboard.welcome', compact('universidades'));

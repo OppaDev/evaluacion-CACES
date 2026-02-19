@@ -23,7 +23,7 @@
     </a>
 </li>
 @endif
-@if (auth()->user()->can('CriteriaR')||auth()->user()->can('admin')||auth()->user()->hasRole('SedeR'))
+@if (auth()->user()->can('admin')||auth()->user()->hasRole('SedeR'))
 <li class="nav-item">
     <a class="nav-link collapsed" id="indicador-assignments" href="{{ route('indicador.assignments.show',$evaluacion->id)}}">
         <i class="bi bi-file-text"></i><span>Asignar Indicadores</span>

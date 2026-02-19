@@ -20,7 +20,7 @@
             @can('admin')
             <div class="col-md-3">
                 <a type="button" class="btn btn-outline-pacifico mb-4 btn-sm"
-                    href="{{ route('universidades.create') }}">
+                    href="{{ route('universidades.create') }}">                    
                     NUEVO REGISTRO
                 </a>
             </div>

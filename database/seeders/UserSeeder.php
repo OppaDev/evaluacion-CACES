@@ -23,25 +23,25 @@ class UserSeeder extends Seeder
 
         // --- Usuarios Admin (vinculados a sede SANGOLQUI) ---
         $admin1 = User::create([
-            'name' => 'ERICK GERMAN RIASCOS MORENO',
-            'email' => 'egriascos@espe.edu.ec',
+            'name' => 'LEONARDO OBANDO',
+            'email' => 'jlobando2@espe.edu.ec',
             'password' => Hash::make('12345678'),
         ]);
         $admin1->assignRole('Admin');
         if ($sedeSangolqui) $admin1->universidades()->attach($sedeSangolqui->id);
 
         $admin2 = User::create([
-            'name' => 'NARCISA DE JESUS BAQUERO FONSECA',
-            'email' => 'ndbaquero1@espe.edu.ec',
-            'password' => '$2y$10$2IoM2XWI36sTHG/diSyV4OFSiyDSZEK//juHL5N4wmlZi0s8B0W9C',
+            'name' => 'WILLIAM LEON',
+            'email' => 'waleon@espe.edu.ec',
+            'password' => Hash::make('12345678'),
         ]);
         $admin2->assignRole('Admin');
         if ($sedeSangolqui) $admin2->universidades()->attach($sedeSangolqui->id);
 
         $admin3 = User::create([
-            'name' => 'LUIS ALEJANDRO LEVOYER ROMERO',
-            'email' => 'lalevoyer@espe.edu.ec',
-            'password' => '$2y$10$ZeQ.g5wIssAasTY3fUK7ZOC2V/yARdC.trbPiLrigjszs5pKym90O',
+            'name' => 'VICTOR CAMACHO',
+            'email' => 'vacamacho1@espe.edu.ec',
+            'password' => Hash::make('12345678'),
         ]);
         $admin3->assignRole('Admin');
         if ($sedeSangolqui) $admin3->universidades()->attach($sedeSangolqui->id);
@@ -49,13 +49,13 @@ class UserSeeder extends Seeder
         // --- Usuarios de prueba (distribuidos entre sedes) ---
         $testUsers = [
             // Sede SANGOLQUI
-            ['name' => 'CARLOS ANDRES MARTINEZ', 'email' => 'prueba1@test.com', 'sede' => $sedeSangolqui],
-            ['name' => 'MARIA JOSE PAREDES',     'email' => 'prueba2@test.com', 'sede' => $sedeSangolqui],
+            ['name' => 'CARLOS ANDRES MARTINEZ', 'email' => 'prueba1@espe.edu.ec', 'sede' => $sedeSangolqui],
+            ['name' => 'MARIA JOSE PAREDES',     'email' => 'prueba2@espe.edu.ec', 'sede' => $sedeSangolqui],
             // Sede LATACUNGA
-            ['name' => 'JORGE LUIS SALAZAR',     'email' => 'prueba3@test.com', 'sede' => $sedeLatacunga],
-            ['name' => 'ANA LUCIA HERRERA',      'email' => 'prueba4@test.com', 'sede' => $sedeLatacunga],
+            ['name' => 'JORGE LUIS SALAZAR',     'email' => 'prueba3@espe.edu.ec', 'sede' => $sedeLatacunga],
+            ['name' => 'ANA LUCIA HERRERA',      'email' => 'prueba4@espe.edu.ec', 'sede' => $sedeLatacunga],
             // Sede SANTO DOMINGO
-            ['name' => 'PEDRO PABLO CAICEDO',    'email' => 'prueba5@test.com', 'sede' => $sedeSantoDomingo],
+            ['name' => 'PEDRO PABLO CAICEDO',    'email' => 'prueba5@espe.edu.ec', 'sede' => $sedeSantoDomingo],
         ];
 
         foreach ($testUsers as $data) {

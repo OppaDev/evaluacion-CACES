@@ -53,16 +53,9 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('indicador-assignments', IndicadorAssignmentsController::class)->names('indicador.assignments');
     });
 
-    // Rutas para Admin, SedeR y CriteriaR (asignación de indicadores)
-    Route::middleware(['role:Admin|SedeR|CriteriaR'])->group(function () {
-        Route::resource('indicador-assignments', IndicadorAssignmentsController::class)->names('indicador.assignments');
-    });
 
     // Rutas exclusivas para Admin
     Route::middleware(['role:Admin'])->group(function () {
-
-        // Bloquear rutas de criterios
-        Route::get('{eva_id}/criterio/{cri_id}', [CriterioController::class, 'criterio'])->name('criterio');
 
         //Manipular usuarios (crear, editar, eliminar)
         Route::get('users', [UserController::class, 'index'])->name('users');

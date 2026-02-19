@@ -21,7 +21,8 @@ class IndicadorLayout extends Component
     public $prueba;
     public $elementosFundamentales;
 
-    public function guardarObservacion($ele_id){
+    public function guardarObservacion($ele_id)
+    {
         $this->validate([
             "observacion.$ele_id" => 'required|string'
         ]);
@@ -45,7 +46,7 @@ class IndicadorLayout extends Component
         $this->indicador = Indicador::find($this->ind_id);
         $this->res_ind = Resultado::resultadosPorIndicador($this->ind_id, $this->eva_id)->sum('resultado');
         $aux = $this->res_ind * 100 / $this->indicador->porcentaje;
-        $aux=round($aux,0);
+        $aux = round($aux, 0);
         if ($aux >= 0 && $aux <= 35) {
             $this->ind_val = 'DEFICIENTE';
             $this->check = false;
@@ -104,7 +105,7 @@ class IndicadorLayout extends Component
                     } else {
                         $datos[$key]['observacion'] = $this->observacion[$key];
                     }
-                    $datos[$key]['eva_use_id'] = auth()->user()->id;
+                    $datos[$key]['eva_use_id'] = $this->evaluacion->use_id;
                     $datos[$key]['eva_uni_id'] = $this->uni_id;
                     $datos[$key]['eva_id'] = $this->eva_id;
                     $datos[$key]['esc_id'] = Escala::where('porcentaje', $this->valoracion[$key])->first()->id;
@@ -125,7 +126,7 @@ class IndicadorLayout extends Component
                 }
             }
             $indRes = ['eva_id' => $this->eva_id, 'ind_id' => $this->ind_id, 'debilidades' => $this->ind_deb, 'fortalezas' => $this->ind_for, 'nudo' => $this->ind_nud, 'justificacion' => $this->ind_jus, 'resultado' => $this->ind_res];
-            ResIndicador::updateOrCreate(['eva_id' => $this->eva_id, 'ind_id' => $this->ind_id],$indRes);
+            ResIndicador::updateOrCreate(['eva_id' => $this->eva_id, 'ind_id' => $this->ind_id], $indRes);
             session()->flash('success', 'Registro agregado con éxito.');
         } catch (\Throwable $th) {
             if (strpos($th->getMessage(), 'Integrity constraint violation: 1452') !== false) {
@@ -146,7 +147,7 @@ class IndicadorLayout extends Component
         } else {
             $res = $this->valoracion['TPhd'] / $this->valoracion['TP'] * $aux;
             if (Resultado::where('for_id', 1)->where('eva_id', $this->eva_id)->get()->isEmpty()) {
-                Resultado::insert(['eva_uni_id' => $this->uni_id, 'eva_use_id' => auth()->user()->id, 'eva_id' => $this->eva_id, 'for_id' => 1, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
+                Resultado::insert(['eva_uni_id' => $this->uni_id, 'eva_use_id' => $this->evaluacion->use_id, 'eva_id' => $this->eva_id, 'for_id' => 1, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
             } else {
                 Resultado::where('for_id', 1)->where('eva_id', $this->eva_id)->update(['resultado' => $res]);
             }
@@ -164,7 +165,7 @@ class IndicadorLayout extends Component
         } else {
             $res = $this->valoracion['PTC'] / $this->valoracion['TP'] * $aux;
             if (Resultado::where('for_id', 2)->where('eva_id', $this->eva_id)->get()->isEmpty()) {
-                $item = ['eva_uni_id' => $this->uni_id, 'eva_use_id' => auth()->user()->id, 'eva_id' => $this->eva_id, 'for_id' => 2, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1];
+                $item = ['eva_uni_id' => $this->uni_id, 'eva_use_id' => $this->evaluacion->use_id, 'eva_id' => $this->eva_id, 'for_id' => 2, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1];
                 Resultado::insert($item);
             } else {
                 Resultado::where('for_id', 2)->where('eva_id', $this->eva_id)->update(['resultado' => $res]);
@@ -185,7 +186,7 @@ class IndicadorLayout extends Component
             }
             $res = 1 / $this->valoracion['n'] * $sum * $aux;
             try {
-                Resultado::create(['eva_uni_id' => $this->uni_id, 'eva_use_id' => auth()->user()->id, 'eva_id' => $this->eva_id, 'for_id' => 3, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
+                Resultado::create(['eva_uni_id' => $this->uni_id, 'eva_use_id' => $this->evaluacion->use_id, 'eva_id' => $this->eva_id, 'for_id' => 3, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
             } catch (\Throwable $th) {
                 Resultado::where('for_id', 3)->where('eva_id', $this->eva_id)->update(['resultado' => $res]);
             }
@@ -204,7 +205,7 @@ class IndicadorLayout extends Component
             }
             $res = 1 / $this->valoracion['n'] * $sum * $aux;
             try {
-                Resultado::create(['eva_uni_id' => $this->uni_id, 'eva_use_id' => auth()->user()->id, 'eva_id' => $this->eva_id, 'for_id' => 4, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
+                Resultado::create(['eva_uni_id' => $this->uni_id, 'eva_use_id' => $this->evaluacion->use_id, 'eva_id' => $this->eva_id, 'for_id' => 4, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
             } catch (\Throwable $th) {
                 Resultado::where('for_id', 4)->where('eva_id', $this->eva_id)->update(['resultado' => $res]);
             }
@@ -224,7 +225,7 @@ class IndicadorLayout extends Component
             }
             $res = 1 / $this->valoracion['n'] * $sum * $aux;
             try {
-                Resultado::create(['eva_uni_id' => $this->uni_id, 'eva_use_id' => auth()->user()->id, 'eva_id' => $this->eva_id, 'for_id' => 5, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
+                Resultado::create(['eva_uni_id' => $this->uni_id, 'eva_use_id' => $this->evaluacion->use_id, 'eva_id' => $this->eva_id, 'for_id' => 5, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
             } catch (\Throwable $th) {
                 Resultado::where('for_id', 5)->where('eva_id', $this->eva_id)->update(['resultado' => $res]);
             }
@@ -240,7 +241,7 @@ class IndicadorLayout extends Component
         } else {
             $res = ($this->valoracion['TPyRF'] + $this->valoracion['TPyCI'] + $this->valoracion['TPyCN']) / $this->valoracion['TP'] * $aux / 100;
             if (Resultado::where('for_id', 6)->where('eva_id', $this->eva_id)->get()->isEmpty()) {
-                Resultado::insert(['eva_uni_id' => $this->uni_id, 'eva_use_id' => auth()->user()->id, 'eva_id' => $this->eva_id, 'for_id' => 6, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
+                Resultado::insert(['eva_uni_id' => $this->uni_id, 'eva_use_id' => $this->evaluacion->use_id, 'eva_id' => $this->eva_id, 'for_id' => 6, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
             } else {
                 Resultado::where('for_id', 6)->where('eva_id', $this->eva_id)->update(['resultado' => $res]);
             }
@@ -256,7 +257,7 @@ class IndicadorLayout extends Component
         } else {
             $res = ($this->valoracion['PAC'] + $this->valoracion['PA'] + $this->valoracion['LyCL'] + $this->valoracion['PIA']) / ($this->valoracion['PTC'] + 0.5 * $this->valoracion['PMT']) * $aux / 100;
             if (Resultado::where('for_id', 7)->where('eva_id', $this->eva_id)->get()->isEmpty()) {
-                Resultado::insert(['eva_uni_id' => $this->uni_id, 'eva_use_id' => auth()->user()->id, 'eva_id' => $this->eva_id, 'for_id' => 7, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
+                Resultado::insert(['eva_uni_id' => $this->uni_id, 'eva_use_id' => $this->evaluacion->use_id, 'eva_id' => $this->eva_id, 'for_id' => 7, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
             } else {
                 Resultado::where('for_id', 7)->where('eva_id', $this->eva_id)->update(['resultado' => $res]);
             }
@@ -272,7 +273,7 @@ class IndicadorLayout extends Component
         } else {
             $res = $this->valoracion['TPV'] / $this->valoracion['TOA'] * $aux / 100;
             if (Resultado::where('for_id', 8)->where('eva_id', $this->eva_id)->get()->isEmpty()) {
-                Resultado::insert(['eva_uni_id' => $this->uni_id, 'eva_use_id' => auth()->user()->id, 'eva_id' => $this->eva_id, 'for_id' => 8, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
+                Resultado::insert(['eva_uni_id' => $this->uni_id, 'eva_use_id' => $this->evaluacion->use_id, 'eva_id' => $this->eva_id, 'for_id' => 8, 'for_ind_id' => $this->ind_id, 'resultado' => $res, 'estatus' => 1]);
             } else {
                 Resultado::where('for_id', 8)->where('eva_id', $this->eva_id)->update(['resultado' => $res]);
             }
