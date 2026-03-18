@@ -104,7 +104,10 @@ class IndicadorSeeder extends Seeder
         ];
 
         foreach ($indicadores as $indicador) {
-            Indicador::create($indicador);
+            Indicador::updateOrCreate(
+                ['indicador' => $indicador['indicador']], // Buscar por nombre del indicador
+                $indicador // Actualizar o crear con estos datos
+            );
         }
     }
 }
